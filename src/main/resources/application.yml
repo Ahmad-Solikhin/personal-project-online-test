@@ -1,9 +1,9 @@
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: ${DB_USERNAME}
+    driver-class-name: org.postgresql.Driver
+    username: postgres
     password: ${DB_PASSWORD}
-    url: jdbc:mysql://localhost:3306/
+    url: jdbc:postgresql://localhost/personal_project_online_test
     hikari:
       connection-timeout: 600000
       idle-timeout: 600000
@@ -16,7 +16,7 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
-        dialect: org.hibernate.dialect.MySQLDialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
         jdbc:
           batch_size: 50
 
