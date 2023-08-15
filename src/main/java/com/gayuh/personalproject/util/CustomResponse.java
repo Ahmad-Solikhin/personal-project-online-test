@@ -8,6 +8,8 @@ import java.util.Map;
 
 public class CustomResponse {
 
+    private CustomResponse() {}
+
     private static Map<String, Object> response;
 
     public static ResponseEntity<Object> generateResponse(
