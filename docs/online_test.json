@@ -1,0 +1,658 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Online Test RESTful API",
+    "version": "1",
+    "description": "OpenAPI for personal project Online Test RESTful API"
+  },
+  "servers": [
+    {
+      "description": "Online Test RESTful API Server",
+      "url": "https://localhost:8080/api/v1"
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Register",
+        "description": "Register to create new user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequest"
+              },
+              "examples": {
+                "Success": {
+                  "description": "Example John Doe register",
+                  "value": {
+                    "name": "John Doe",
+                    "email": "johndoe@gmail.com",
+                    "password": "secret123",
+                    "retype_password": "secret123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success register",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseObjectWithoutData"
+                },
+                "examples": {
+                  "Success": {
+                    "description": "Success register",
+                    "value": {
+                      "message": "Success register new account, check your email",
+                      "status": 201
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request register",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseObjectWithoutData"
+                },
+                "examples": {
+                  "Bad request": {
+                    "description": "Bad request register",
+                    "value": {
+                      "message": {
+                        "name": "name cannot be blank",
+                        "email": "wrong format email",
+                        "password": "password must longer or equals to 8"
+                      },
+                      "status": 400
+                    }
+                  },
+                  "Email already exist": {
+                    "description": "Email already used",
+                    "value": {
+                      "message": {
+                        "email": "email already used"
+                      },
+                      "status": 400
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Login",
+        "description": "Login with existing user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              },
+              "examples": {
+                "Success": {
+                  "description": "Example John Doe login",
+                  "value": {
+                    "email": "johndoe@gmail.com",
+                    "password": "secret123"
+                  }
+                },
+                "Bad request": {
+                  "description": "Example bad request login",
+                  "value": {
+                    "email": "",
+                    "password": ""
+                  }
+                },
+                "Not found": {
+                  "description": "Example not found login",
+                  "value": {
+                    "email": "notfound@gmail.com",
+                    "password": "idon'tevenknow"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithData"
+                },
+                "examples": {
+                  "Success": {
+                    "description": "Success login",
+                    "value": {
+                      "message": "Success login",
+                      "status": 200,
+                      "data": {
+                        "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYW5kaWRhdGVAZ21haWwuY29tIiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6ImFwcGxpY2FudCJ9XSwiaWF0IjoxNjkwMTgzMjM4LCJleHAiOjE2OTAxOTA0Mzh9.tu4QHbXYATul_fbzmlKTG6n3cDZY21c-AA8Qw0slKf8"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failed login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseObjectWithoutData"
+                },
+                "examples": {
+                  "Bad Request": {
+                    "description": "Bad request",
+                    "value": {
+                      "message": {
+                        "email": "email cannot be blank",
+                        "password": "password cannot be blank"
+                      },
+                      "status": 400
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Failed login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithoutData"
+                },
+                "examples": {
+                  "Not Found": {
+                    "description": "Not found",
+                    "value": {
+                      "message": "email or password is wrong",
+                      "status": 404
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/verify-email": {
+      "put": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Verify email",
+        "description": "Verify email to enable new registered account",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Token"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success verify email",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithoutData"
+                },
+                "examples": {
+                  "Success": {
+                    "description": "Success verify email",
+                    "value": {
+                      "message": "Success verify email",
+                      "status": 200
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Account not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithoutData"
+                },
+                "examples": {
+                  "Not found": {
+                    "description": "Account not found",
+                    "value": {
+                      "message": "Account not found",
+                      "status": 404
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/resend-verify-email": {
+      "put": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Resend email verification",
+        "description": "Update token in table user verify",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmailRequest"
+              },
+              "examples": {
+                "Success": {
+                  "description": "Success resend email verification",
+                  "value": {
+                    "email": "johndoe@gmail.com"
+                  }
+                },
+                "Bad request": {
+                  "description": "Bad request resend email verification",
+                  "value": {
+                    "email": ""
+                  }
+                },
+                "Not found": {
+                  "description": "Account not found",
+                  "value": {
+                    "email": "emailnotdefined@gmail.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success resend email verification",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithoutData"
+                },
+                "examples": {
+                  "Success": {
+                    "description": "Success resend email verification",
+                    "value": {
+                      "message": "Success resend email verification",
+                      "status": 200
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request resend email verification",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseObjectWithoutData"
+                },
+                "examples": {
+                  "Bad request": {
+                    "description": "Bad request resend email verification",
+                    "value": {
+                      "message": {
+                        "email": "email cannot be blank"
+                      },
+                      "status": 400
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Account not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseObjectWithoutData"
+                },
+                "examples": {
+                  "Bad request": {
+                    "description": "Account not found",
+                    "value": {
+                      "message": "Account not found",
+                      "status": 404
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/forgot-password": {
+      "put": {
+        "tags": [
+          "Authentication"
+        ],
+        "description": "Create token to forgot password and send email",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmailRequest"
+              },
+              "examples": {
+                "Success": {
+                  "value": {
+                    "email": "johndoe@gmail.com"
+                  }
+                },
+                "Bad request": {
+                  "value": {
+                    "email": ""
+                  }
+                },
+                "Not found": {
+                  "value": {
+                    "email": "notdefiened@gmail.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success forgot password",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithoutData"
+                },
+                "example": {
+                  "message": "Check email for forget password",
+                  "status": 200
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request forgot password",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseObjectWithoutData"
+                },
+                "example": {
+                  "message": {
+                    "email": "email cannot be blank"
+                  },
+                  "status": 400
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Account not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithoutData"
+                },
+                "example": {
+                  "message": "Account not found",
+                  "status": 404
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Authentication"
+        ],
+        "description": "Send new password to change password",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Token"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": true,
+                "properties": {
+                  "password": {
+                    "type": "string",
+                    "nullable": false,
+                    "minLength": 8
+                  }
+                }
+              },
+              "examples": {
+                "Success": {
+                  "value": {
+                    "password": "anothersecret"
+                  }
+                },
+                "Bad request blank": {
+                  "value": {
+                    "password": ""
+                  }
+                },
+                "Bad request too short": {
+                  "value": {
+                    "password": "short"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success change password",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithoutData"
+                },
+                "example": {
+                  "message": "Success change password",
+                  "status": 200
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request password",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseObjectWithoutData"
+                },
+                "examples": {
+                  "Blank": {
+                    "value": {
+                      "message": {
+                        "password": "password cannot be blank"
+                      },
+                      "status": 400
+                    }
+                  },
+                  "Too short": {
+                    "value": {
+                      "message": {
+                        "password": "password must longer or equals to 8"
+                      },
+                      "status": 400
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Account not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithoutData"
+                },
+                "example": {
+                  "value": {
+                    "message": "Account not found",
+                    "status": 400
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "description": "Authentication for Online Test RESTful API",
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "jwt"
+      }
+    },
+    "parameters": {
+      "Token": {
+        "name": "token",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "examples": {
+          "Exist": {
+            "value": "akjdajkjdhauiqejqe129831ohbjoad"
+          },
+          "Not exist": {
+            "value": ""
+          },
+          "Not found": {
+            "value": "notdefined"
+          }
+        }
+      }
+    },
+    "schemas": {
+      "RegisterRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": false
+          },
+          "email": {
+            "type": "string",
+            "nullable": false
+          },
+          "password": {
+            "type": "string",
+            "nullable": false,
+            "minLength": 8
+          },
+          "retype_password": {
+            "type": "string",
+            "nullable": false,
+            "minLength": 8
+          }
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "nullable": false
+          },
+          "password": {
+            "type": "string",
+            "nullable": false
+          }
+        }
+      },
+      "ResponseStringWithoutData": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer"
+          }
+        }
+      },
+      "ResponseStringWithData": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer"
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      },
+      "ResponseObjectWithoutData": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "object"
+          },
+          "status": {
+            "type": "integer"
+          }
+        }
+      },
+      "EmailRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "nullable": false
+          }
+        }
+      }
+    }
+  }
+}
