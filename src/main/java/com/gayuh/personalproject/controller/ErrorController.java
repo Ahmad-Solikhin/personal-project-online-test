@@ -49,8 +49,8 @@ public class ErrorController {
     }
 
     @ExceptionHandler(value = ConstraintViolationException.class)
-    public ResponseEntity<Object> notFoundException(
-            jakarta.validation.ConstraintViolationException exception
+    public ResponseEntity<Object> constraintViolationException(
+            ConstraintViolationException exception
     ) {
         log.warn("Error in ConstraintViolationException");
         Map<String, String> errorMap = exception.getConstraintViolations()

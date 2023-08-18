@@ -3,6 +3,8 @@ package com.gayuh.personalproject.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
@@ -17,4 +19,6 @@ public class Access {
     @Column(name = "access_id")
     private Long id;
     private String name;
+    @OneToMany(mappedBy = "access")
+    private List<QuestionTitle> questionTitles;
 }
