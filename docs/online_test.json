@@ -8,7 +8,15 @@
   "servers": [
     {
       "description": "Online Test RESTful API Server",
-      "url": "https://localhost:8080/api/v1"
+      "url": "https://localhost:8080/api/{version}",
+      "variables": {
+        "version": {
+          "default": "v1",
+          "enum": [
+            "v1"
+          ]
+        }
+      }
     }
   ],
   "paths": {
@@ -360,6 +368,7 @@
         "tags": [
           "Authentication"
         ],
+        "summary": "Send email forgot password",
         "description": "Create token to forgot password and send email",
         "requestBody": {
           "content": {
@@ -438,6 +447,7 @@
         "tags": [
           "Authentication"
         ],
+        "summary": "Forgot password",
         "description": "Send new password to change password",
         "parameters": [
           {
@@ -539,11 +549,300 @@
           }
         }
       }
+    },
+    "/topics": {
+      "post": {
+        "security": [{
+          "OnlineTestAuth": ["admin"]
+        }],
+        "tags": [
+          "Topic"
+        ],
+        "summary": "Create new topic",
+        "description": "Add new topic",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TopicRequest"
+              },
+              "examples": {
+                "Success": {
+                  "value": {
+                    "name": "Database"
+                  }
+                },
+                "Bad request": {
+                  "value": {
+                    "name": ""
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success created new topic",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithData"
+                },
+                "example": {
+                  "message": "Success created new topic",
+                  "status": 201,
+                  "data": {
+                    "id": 1,
+                    "name": "Database"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseObjectWithoutData"
+                },
+                "example": {
+                  "message": {
+                    "name": "must not be blank"
+                  },
+                  "status": 400
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "security": [{
+          "OnlineTestAuth": []
+        }],
+        "tags": [
+          "Topic"
+        ],
+        "summary": "Get topics",
+        "description": "Get all topic",
+        "responses": {
+          "200": {
+            "description": "Success get all topic",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithData"
+                },
+                "example": {
+                  "message": "Data found with size 2",
+                  "status": 200,
+                  "data": [
+                    {
+                      "id": 1,
+                      "name": "Database"
+                    },
+                    {
+                      "id": 2,
+                      "name": "Science"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/topics/{topicId}": {
+      "put": {
+        "security": [{
+          "OnlineTestAuth": []
+        }],
+        "tags": [
+          "Topic"
+        ],
+        "summary": "Update topic by id",
+        "description": "Update topic by id",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/TopicId"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TopicRequest"
+              },
+              "examples": {
+                "Success": {
+                  "value": {
+                    "name": "Programming"
+                  }
+                },
+                "Bad request": {
+                  "value": {
+                    "name": ""
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success update topic",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithData"
+                },
+                "example": {
+                  "message": "Success update topic",
+                  "status": 200,
+                  "data": {
+                    "id": 1,
+                    "name": "Programming"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request update topic",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseObjectWithoutData"
+                },
+                "example": {
+                  "message": {
+                    "name": "must not be blank"
+                  },
+                  "status": 400
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Topic not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithoutData"
+                },
+                "example": {
+                  "message": "Data not found",
+                  "status": 404
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [{
+          "OnlineTestAuth": []
+        }],
+        "tags": [
+          "Topic"
+        ],
+        "summary": "Delete topic by id",
+        "description": "Delete topic by id",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/TopicId"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success delete topic",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithoutData"
+                },
+                "example": {
+                  "message": "Success delete data",
+                  "status": 204
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Topic not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithoutData"
+                },
+                "example": {
+                  "message": "Data not found",
+                  "status": 404
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "security": [{
+          "OnlineTestAuth": []
+        }],
+        "tags": [
+          "Topic"
+        ],
+        "summary": "Get topic by id",
+        "description": "Get topic by id",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/TopicId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success get topic",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithData"
+                },
+                "example": {
+                  "message": "Data found",
+                  "status": 200,
+                  "data": {
+                    "id": 1,
+                    "name": "Database"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Topic not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithoutData"
+                },
+                "example": {
+                  "message": "Data not found",
+                  "status": 404
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "securitySchemes": {
-      "BearerAuth": {
+      "OnlineTestAuth": {
         "description": "Authentication for Online Test RESTful API",
         "type": "http",
         "scheme": "bearer",
@@ -567,6 +866,22 @@
           },
           "Not found": {
             "value": "notdefined"
+          }
+        }
+      },
+      "TopicId": {
+        "name": "topicId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        },
+        "examples": {
+          "Exist": {
+            "value": "1"
+          },
+          "Not found": {
+            "value": "-1"
           }
         }
       }
@@ -648,6 +963,15 @@
         "type": "object",
         "properties": {
           "email": {
+            "type": "string",
+            "nullable": false
+          }
+        }
+      },
+      "TopicRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
             "type": "string",
             "nullable": false
           }
