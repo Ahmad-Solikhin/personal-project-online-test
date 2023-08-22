@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gayuh.personalproject.dto.MasterRequest;
 import com.gayuh.personalproject.dto.MasterResponse;
 import com.gayuh.personalproject.dto.WebResponse;
-import com.gayuh.personalproject.entity.Topic;
-import com.gayuh.personalproject.repository.TopicRepository;
+import com.gayuh.personalproject.entity.Difficulty;
+import com.gayuh.personalproject.repository.DifficultyRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,46 +21,48 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @TestPropertySource("classpath:application-test.yml")
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-class TopicControllerTest {
+class DifficultyControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
     @Autowired
-    private TopicRepository topicRepository;
+    private DifficultyRepository difficultyRepository;
     @Autowired
     private ObjectMapper objectMapper;
 
-    private final Topic staticTopic = new Topic();
+    private final Difficulty staticDifficulty = new Difficulty();
 
     @BeforeEach
     void setUp() {
-        topicRepository.deleteAll();
+        difficultyRepository.deleteAll();
     }
 
     @Test
     void getAll() throws Exception {
 
-        List<Topic> topics = new ArrayList<>();
+        List<Difficulty> difficulties = new ArrayList<>();
 
-        Topic topic;
+        Difficulty difficulty;
 
         for (int i = 0; i < 10; i++) {
-            topic = new Topic();
-            topic.setName("Topic ke-" + (i + 1));
-            topics.add(topic);
+            difficulty = new Difficulty();
+            difficulty.setName("Difficulty ke-" + (i + 1));
+            difficulties.add(difficulty);
         }
 
-        topicRepository.saveAll(topics);
+        difficultyRepository.saveAll(difficulties);
 
         mockMvc.perform(
-                get("/api/v1/topics")
+                get("/api/v1/difficulties")
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpectAll(
                 status().isOk()
@@ -76,11 +78,11 @@ class TopicControllerTest {
 
     @Test
     void getByIdSuccess() throws Exception {
-        staticTopic.setName("Test");
-        topicRepository.save(staticTopic);
+        staticDifficulty.setName("Test");
+        difficultyRepository.save(staticDifficulty);
 
         mockMvc.perform(
-                get("/api/v1/topics/" + staticTopic.getId())
+                get("/api/v1/difficulties/" + staticDifficulty.getId())
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpectAll(
                 status().isOk()
@@ -98,7 +100,7 @@ class TopicControllerTest {
     void getByIdNotFound() throws Exception {
 
         mockMvc.perform(
-                get("/api/v1/topics/-1")
+                get("/api/v1/difficulties/-1")
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpectAll(
                 status().isNotFound()
@@ -112,13 +114,13 @@ class TopicControllerTest {
     }
 
     @Test
-    void createTopicSuccess() throws Exception {
+    void createDifficultySuccess() throws Exception {
         MasterRequest request = new MasterRequest("Test 2");
 
         String requestJson = objectMapper.writeValueAsString(request);
 
         mockMvc.perform(
-                post("/api/v1/topics")
+                post("/api/v1/difficulties")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson)
@@ -135,13 +137,13 @@ class TopicControllerTest {
     }
 
     @Test
-    void createTopicBadRequest() throws Exception {
+    void createDifficultyBadRequest() throws Exception {
         MasterRequest request = new MasterRequest("");
 
         String requestJson = objectMapper.writeValueAsString(request);
 
         mockMvc.perform(
-                post("/api/v1/topics")
+                post("/api/v1/difficulties")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson)
@@ -157,16 +159,16 @@ class TopicControllerTest {
     }
 
     @Test
-    void updateTopicSuccess() throws Exception {
-        Topic topic = new Topic();
-        topic.setName("Test Aja");
-        topicRepository.save(topic);
+    void updateDifficultySuccess() throws Exception {
+        Difficulty role = new Difficulty();
+        role.setName("Test Aja");
+        difficultyRepository.save(role);
 
         MasterRequest request = new MasterRequest("Test Update");
         String requestJson = objectMapper.writeValueAsString(request);
 
         mockMvc.perform(
-                put("/api/v1/topics/" + topic.getId())
+                put("/api/v1/difficulties/" + role.getId())
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson)
@@ -183,17 +185,17 @@ class TopicControllerTest {
     }
 
     @Test
-    void updateTopicBadRequest() throws Exception {
-        Topic topic = new Topic();
-        topic.setName("Test Aja");
-        topicRepository.save(topic);
+    void updateDifficultyBadRequest() throws Exception {
+        Difficulty role = new Difficulty();
+        role.setName("Test Aja");
+        difficultyRepository.save(role);
 
         MasterRequest request = new MasterRequest("");
 
         String requestJson = objectMapper.writeValueAsString(request);
 
         mockMvc.perform(
-                put("/api/v1/topics/" + topic.getId())
+                put("/api/v1/difficulties/" + role.getId())
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson)
@@ -209,13 +211,13 @@ class TopicControllerTest {
     }
 
     @Test
-    void deleteTopicSuccess() throws Exception {
-        Topic topic = new Topic();
-        topic.setName("Test Aja");
-        topicRepository.save(topic);
+    void deleteDifficultySuccess() throws Exception {
+        Difficulty role = new Difficulty();
+        role.setName("Test Aja");
+        difficultyRepository.save(role);
 
         mockMvc.perform(
-                delete("/api/v1/topics/" + topic.getId())
+                delete("/api/v1/difficulties/" + role.getId())
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpectAll(
                 status().isNoContent()
@@ -229,9 +231,9 @@ class TopicControllerTest {
     }
 
     @Test
-    void deleteTopicNotFound() throws Exception {
+    void deleteDifficultyNotFound() throws Exception {
         mockMvc.perform(
-                delete("/api/v1/topics/-1")
+                delete("/api/v1/difficulties/-1")
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpectAll(
                 status().isNotFound()

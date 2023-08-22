@@ -3,35 +3,39 @@ package com.gayuh.personalproject.controller;
 import com.gayuh.personalproject.dto.MasterRequest;
 import com.gayuh.personalproject.dto.MasterResponse;
 import com.gayuh.personalproject.enumerated.ResponseMessage;
-import com.gayuh.personalproject.service.topic.TopicService;
+import com.gayuh.personalproject.service.difficulty.DifficultyService;
 import com.gayuh.personalproject.util.CustomResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping(value = "api/v1/topics")
+@RequestMapping(value = "api/v1/difficulties")
 @RequiredArgsConstructor
-public class TopicController {
-    private final TopicService topicService;
+public class DifficultyController {
+
+    private final DifficultyService difficultyService;
 
     @GetMapping
-    public ResponseEntity<Object> getAllTopic() {
-        var response = topicService.getAll();
+    public ResponseEntity<Object> getAllDifficulty() {
+
+        List<MasterResponse> responses = difficultyService.getAll();
 
         return CustomResponse.generateResponse(
-                ResponseMessage.GET_ALL_DATA.value() + response.size(),
+                ResponseMessage.GET_ALL_DATA.value() + responses.size(),
                 HttpStatus.OK,
-                response
+                responses
         );
     }
 
-    @GetMapping(value = "/{topicId}")
-    public ResponseEntity<Object> getTopicByid(
-            @PathVariable(name = "topicId") Long topicId
+    @GetMapping(value = "{difficultyId}")
+    public ResponseEntity<Object> getDifficultyById(
+            @PathVariable(name = "difficultyId") Long difficultyId
     ) {
-        MasterResponse response = topicService.getById(topicId);
+        MasterResponse response = difficultyService.getById(difficultyId);
 
         return CustomResponse.generateResponse(
                 ResponseMessage.GET_DATA.value(),
@@ -41,10 +45,10 @@ public class TopicController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> createTopic(
+    public ResponseEntity<Object> createDifficulty(
             @RequestBody MasterRequest request
     ) {
-        MasterResponse response = topicService.create(request);
+        MasterResponse response = difficultyService.create(request);
 
         return CustomResponse.generateResponse(
                 ResponseMessage.CREATE_DATA.value(),
@@ -53,12 +57,12 @@ public class TopicController {
         );
     }
 
-    @PutMapping(value = "/{topicId}")
-    public ResponseEntity<Object> updateTopic(
-            @RequestBody MasterRequest request,
-            @PathVariable(name = "topicId") Long topicId
+    @PutMapping(value = "{difficultyId}")
+    public ResponseEntity<Object> updateDifficulty(
+            @PathVariable(name = "difficultyId") Long difficultyId,
+            @RequestBody MasterRequest request
     ) {
-        MasterResponse response = topicService.update(request, topicId);
+        MasterResponse response = difficultyService.update(request, difficultyId);
 
         return CustomResponse.generateResponse(
                 ResponseMessage.UPDATE_DATA.value(),
@@ -67,15 +71,16 @@ public class TopicController {
         );
     }
 
-    @DeleteMapping(value = "/{topicId}")
-    public ResponseEntity<Object> deleteTopic(
-            @PathVariable(name = "topicId") Long topicId
+    @DeleteMapping(value = "{difficultyId}")
+    public ResponseEntity<Object> deleteDifficulty(
+            @PathVariable(name = "difficultyId") Long difficultyId
     ) {
-        topicService.deleteById(topicId);
+        difficultyService.deleteById(difficultyId);
 
         return CustomResponse.generateResponse(
                 ResponseMessage.DELETE_DATA.value(),
                 HttpStatus.NO_CONTENT
         );
     }
+
 }

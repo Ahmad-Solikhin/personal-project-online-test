@@ -3,35 +3,38 @@ package com.gayuh.personalproject.controller;
 import com.gayuh.personalproject.dto.MasterRequest;
 import com.gayuh.personalproject.dto.MasterResponse;
 import com.gayuh.personalproject.enumerated.ResponseMessage;
-import com.gayuh.personalproject.service.topic.TopicService;
+import com.gayuh.personalproject.service.access.AccessService;
 import com.gayuh.personalproject.util.CustomResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping(value = "api/v1/topics")
+@RequestMapping(value = "api/v1/accesses")
 @RequiredArgsConstructor
-public class TopicController {
-    private final TopicService topicService;
+public class AccessController {
+
+    private final AccessService accessService;
 
     @GetMapping
-    public ResponseEntity<Object> getAllTopic() {
-        var response = topicService.getAll();
+    public ResponseEntity<Object> getAllAccess() {
+        List<MasterResponse> responses = accessService.getAll();
 
         return CustomResponse.generateResponse(
-                ResponseMessage.GET_ALL_DATA.value() + response.size(),
+                ResponseMessage.GET_ALL_DATA.value() + responses.size(),
                 HttpStatus.OK,
-                response
+                responses
         );
     }
 
-    @GetMapping(value = "/{topicId}")
-    public ResponseEntity<Object> getTopicByid(
-            @PathVariable(name = "topicId") Long topicId
+    @GetMapping(value = "{accessId}")
+    public ResponseEntity<Object> getAccessById(
+            @PathVariable(name = "accessId") Long accessId
     ) {
-        MasterResponse response = topicService.getById(topicId);
+        MasterResponse response = accessService.getById(accessId);
 
         return CustomResponse.generateResponse(
                 ResponseMessage.GET_DATA.value(),
@@ -41,10 +44,10 @@ public class TopicController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> createTopic(
+    public ResponseEntity<Object> createAccess(
             @RequestBody MasterRequest request
     ) {
-        MasterResponse response = topicService.create(request);
+        MasterResponse response = accessService.create(request);
 
         return CustomResponse.generateResponse(
                 ResponseMessage.CREATE_DATA.value(),
@@ -53,12 +56,12 @@ public class TopicController {
         );
     }
 
-    @PutMapping(value = "/{topicId}")
-    public ResponseEntity<Object> updateTopic(
-            @RequestBody MasterRequest request,
-            @PathVariable(name = "topicId") Long topicId
+    @PutMapping(value = "{accessId}")
+    public ResponseEntity<Object> updateAccess(
+            @PathVariable(name = "accessId") Long accessId,
+            @RequestBody MasterRequest request
     ) {
-        MasterResponse response = topicService.update(request, topicId);
+        MasterResponse response = accessService.update(request, accessId);
 
         return CustomResponse.generateResponse(
                 ResponseMessage.UPDATE_DATA.value(),
@@ -67,11 +70,11 @@ public class TopicController {
         );
     }
 
-    @DeleteMapping(value = "/{topicId}")
-    public ResponseEntity<Object> deleteTopic(
-            @PathVariable(name = "topicId") Long topicId
+    @DeleteMapping(value = "{accessId}")
+    public ResponseEntity<Object> deleteAccess(
+            @PathVariable(name = "accessId") Long accessId
     ) {
-        topicService.deleteById(topicId);
+        accessService.deleteById(accessId);
 
         return CustomResponse.generateResponse(
                 ResponseMessage.DELETE_DATA.value(),

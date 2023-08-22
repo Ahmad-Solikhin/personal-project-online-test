@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gayuh.personalproject.dto.MasterRequest;
 import com.gayuh.personalproject.dto.MasterResponse;
 import com.gayuh.personalproject.dto.WebResponse;
-import com.gayuh.personalproject.entity.Topic;
-import com.gayuh.personalproject.repository.TopicRepository;
+import com.gayuh.personalproject.entity.Access;
+import com.gayuh.personalproject.repository.AccessRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,46 +21,48 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @TestPropertySource("classpath:application-test.yml")
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-class TopicControllerTest {
+class AccessControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
     @Autowired
-    private TopicRepository topicRepository;
+    private AccessRepository accessRepository;
     @Autowired
     private ObjectMapper objectMapper;
 
-    private final Topic staticTopic = new Topic();
+    private final Access staticAccess = new Access();
 
     @BeforeEach
     void setUp() {
-        topicRepository.deleteAll();
+        accessRepository.deleteAll();
     }
 
     @Test
     void getAll() throws Exception {
 
-        List<Topic> topics = new ArrayList<>();
+        List<Access> accesses = new ArrayList<>();
 
-        Topic topic;
+        Access access;
 
         for (int i = 0; i < 10; i++) {
-            topic = new Topic();
-            topic.setName("Topic ke-" + (i + 1));
-            topics.add(topic);
+            access = new Access();
+            access.setName("Access ke-" + (i + 1));
+            accesses.add(access);
         }
 
-        topicRepository.saveAll(topics);
+        accessRepository.saveAll(accesses);
 
         mockMvc.perform(
-                get("/api/v1/topics")
+                get("/api/v1/accesses")
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpectAll(
                 status().isOk()
@@ -76,11 +78,11 @@ class TopicControllerTest {
 
     @Test
     void getByIdSuccess() throws Exception {
-        staticTopic.setName("Test");
-        topicRepository.save(staticTopic);
+        staticAccess.setName("Test");
+        accessRepository.save(staticAccess);
 
         mockMvc.perform(
-                get("/api/v1/topics/" + staticTopic.getId())
+                get("/api/v1/accesses/" + staticAccess.getId())
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpectAll(
                 status().isOk()
@@ -98,7 +100,7 @@ class TopicControllerTest {
     void getByIdNotFound() throws Exception {
 
         mockMvc.perform(
-                get("/api/v1/topics/-1")
+                get("/api/v1/accesses/-1")
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpectAll(
                 status().isNotFound()
@@ -112,13 +114,13 @@ class TopicControllerTest {
     }
 
     @Test
-    void createTopicSuccess() throws Exception {
+    void createAccessSuccess() throws Exception {
         MasterRequest request = new MasterRequest("Test 2");
 
         String requestJson = objectMapper.writeValueAsString(request);
 
         mockMvc.perform(
-                post("/api/v1/topics")
+                post("/api/v1/accesses")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson)
@@ -135,13 +137,13 @@ class TopicControllerTest {
     }
 
     @Test
-    void createTopicBadRequest() throws Exception {
+    void createAccessBadRequest() throws Exception {
         MasterRequest request = new MasterRequest("");
 
         String requestJson = objectMapper.writeValueAsString(request);
 
         mockMvc.perform(
-                post("/api/v1/topics")
+                post("/api/v1/accesses")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson)
@@ -157,16 +159,16 @@ class TopicControllerTest {
     }
 
     @Test
-    void updateTopicSuccess() throws Exception {
-        Topic topic = new Topic();
-        topic.setName("Test Aja");
-        topicRepository.save(topic);
+    void updateAccessSuccess() throws Exception {
+        Access access = new Access();
+        access.setName("Test Aja");
+        accessRepository.save(access);
 
         MasterRequest request = new MasterRequest("Test Update");
         String requestJson = objectMapper.writeValueAsString(request);
 
         mockMvc.perform(
-                put("/api/v1/topics/" + topic.getId())
+                put("/api/v1/accesses/" + access.getId())
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson)
@@ -183,17 +185,17 @@ class TopicControllerTest {
     }
 
     @Test
-    void updateTopicBadRequest() throws Exception {
-        Topic topic = new Topic();
-        topic.setName("Test Aja");
-        topicRepository.save(topic);
+    void updateAccessBadRequest() throws Exception {
+        Access access = new Access();
+        access.setName("Test Aja");
+        accessRepository.save(access);
 
         MasterRequest request = new MasterRequest("");
 
         String requestJson = objectMapper.writeValueAsString(request);
 
         mockMvc.perform(
-                put("/api/v1/topics/" + topic.getId())
+                put("/api/v1/accesses/" + access.getId())
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson)
@@ -209,13 +211,13 @@ class TopicControllerTest {
     }
 
     @Test
-    void deleteTopicSuccess() throws Exception {
-        Topic topic = new Topic();
-        topic.setName("Test Aja");
-        topicRepository.save(topic);
+    void deleteAccessSuccess() throws Exception {
+        Access access = new Access();
+        access.setName("Test Aja");
+        accessRepository.save(access);
 
         mockMvc.perform(
-                delete("/api/v1/topics/" + topic.getId())
+                delete("/api/v1/accesses/" + access.getId())
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpectAll(
                 status().isNoContent()
@@ -229,7 +231,7 @@ class TopicControllerTest {
     }
 
     @Test
-    void deleteTopicNotFound() throws Exception {
+    void deleteAccessNotFound() throws Exception {
         mockMvc.perform(
                 delete("/api/v1/topics/-1")
                         .accept(MediaType.APPLICATION_JSON)
@@ -243,5 +245,4 @@ class TopicControllerTest {
             assertNull(response.getData());
         });
     }
-
 }

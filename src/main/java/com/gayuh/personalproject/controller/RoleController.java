@@ -3,35 +3,40 @@ package com.gayuh.personalproject.controller;
 import com.gayuh.personalproject.dto.MasterRequest;
 import com.gayuh.personalproject.dto.MasterResponse;
 import com.gayuh.personalproject.enumerated.ResponseMessage;
-import com.gayuh.personalproject.service.topic.TopicService;
+import com.gayuh.personalproject.service.role.RoleService;
 import com.gayuh.personalproject.util.CustomResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping(value = "api/v1/topics")
+@RequestMapping(value = "api/v1/roles")
 @RequiredArgsConstructor
-public class TopicController {
-    private final TopicService topicService;
+public class RoleController {
+
+    private final RoleService roleService;
 
     @GetMapping
-    public ResponseEntity<Object> getAllTopic() {
-        var response = topicService.getAll();
+    public ResponseEntity<Object> getAllRole() {
+
+        List<MasterResponse> responses = roleService.getAll();
 
         return CustomResponse.generateResponse(
-                ResponseMessage.GET_ALL_DATA.value() + response.size(),
+                ResponseMessage.GET_ALL_DATA.value() + responses.size(),
                 HttpStatus.OK,
-                response
+                responses
         );
     }
 
-    @GetMapping(value = "/{topicId}")
-    public ResponseEntity<Object> getTopicByid(
-            @PathVariable(name = "topicId") Long topicId
+    @GetMapping(value = "{roleId}")
+    public ResponseEntity<Object> getRoleById(
+            @PathVariable(name = "roleId") Long roleId
     ) {
-        MasterResponse response = topicService.getById(topicId);
+
+        MasterResponse response = roleService.getById(roleId);
 
         return CustomResponse.generateResponse(
                 ResponseMessage.GET_DATA.value(),
@@ -41,24 +46,27 @@ public class TopicController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> createTopic(
+    public ResponseEntity<Object> createRole(
             @RequestBody MasterRequest request
     ) {
-        MasterResponse response = topicService.create(request);
+
+        MasterResponse response = roleService.create(request);
 
         return CustomResponse.generateResponse(
                 ResponseMessage.CREATE_DATA.value(),
                 HttpStatus.CREATED,
                 response
         );
+
     }
 
-    @PutMapping(value = "/{topicId}")
-    public ResponseEntity<Object> updateTopic(
-            @RequestBody MasterRequest request,
-            @PathVariable(name = "topicId") Long topicId
+    @PutMapping(value = "{roleId}")
+    public ResponseEntity<Object> updateRole(
+            @PathVariable(name = "roleId") Long roleId,
+            @RequestBody MasterRequest request
     ) {
-        MasterResponse response = topicService.update(request, topicId);
+
+        MasterResponse response = roleService.update(request, roleId);
 
         return CustomResponse.generateResponse(
                 ResponseMessage.UPDATE_DATA.value(),
@@ -67,11 +75,12 @@ public class TopicController {
         );
     }
 
-    @DeleteMapping(value = "/{topicId}")
-    public ResponseEntity<Object> deleteTopic(
-            @PathVariable(name = "topicId") Long topicId
+    @DeleteMapping(value = "{roleId}")
+    public ResponseEntity<Object> deleteRole(
+            @PathVariable(name = "roleId") Long roleId
     ) {
-        topicService.deleteById(topicId);
+
+        roleService.deleteById(roleId);
 
         return CustomResponse.generateResponse(
                 ResponseMessage.DELETE_DATA.value(),

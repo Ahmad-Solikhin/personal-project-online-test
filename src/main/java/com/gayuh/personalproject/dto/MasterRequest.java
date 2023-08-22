@@ -2,7 +2,7 @@ package com.gayuh.personalproject.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
-public record TopicRequest(
+public record MasterRequest(
         @NotBlank
         String name
 ) {

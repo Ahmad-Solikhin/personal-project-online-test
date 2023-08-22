@@ -552,9 +552,13 @@
     },
     "/topics": {
       "post": {
-        "security": [{
-          "OnlineTestAuth": ["admin"]
-        }],
+        "security": [
+          {
+            "OnlineTestAuth": [
+              "admin"
+            ]
+          }
+        ],
         "tags": [
           "Topic"
         ],
@@ -565,7 +569,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/TopicRequest"
+                "$ref": "#/components/schemas/MasterRequest"
               },
               "examples": {
                 "Success": {
@@ -620,9 +624,6 @@
         }
       },
       "get": {
-        "security": [{
-          "OnlineTestAuth": []
-        }],
         "tags": [
           "Topic"
         ],
@@ -658,9 +659,11 @@
     },
     "/topics/{topicId}": {
       "put": {
-        "security": [{
-          "OnlineTestAuth": []
-        }],
+        "security": [
+          {
+            "OnlineTestAuth": []
+          }
+        ],
         "tags": [
           "Topic"
         ],
@@ -676,7 +679,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/TopicRequest"
+                "$ref": "#/components/schemas/MasterRequest"
               },
               "examples": {
                 "Success": {
@@ -745,9 +748,11 @@
         }
       },
       "delete": {
-        "security": [{
-          "OnlineTestAuth": []
-        }],
+        "security": [
+          {
+            "OnlineTestAuth": []
+          }
+        ],
         "tags": [
           "Topic"
         ],
@@ -790,9 +795,6 @@
         }
       },
       "get": {
-        "security": [{
-          "OnlineTestAuth": []
-        }],
         "tags": [
           "Topic"
         ],
@@ -824,6 +826,899 @@
           },
           "404": {
             "description": "Topic not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithoutData"
+                },
+                "example": {
+                  "message": "Data not found",
+                  "status": 404
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accesses": {
+      "post": {
+        "security": [
+          {
+            "OnlineTestAuth": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "Access"
+        ],
+        "summary": "Create new access",
+        "description": "Add new access",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MasterRequest"
+              },
+              "examples": {
+                "Success": {
+                  "value": {
+                    "name": "Private"
+                  }
+                },
+                "Bad request": {
+                  "value": {
+                    "name": ""
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success created new access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithData"
+                },
+                "example": {
+                  "message": "Success created new access",
+                  "status": 201,
+                  "data": {
+                    "id": 1,
+                    "name": "Private"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseObjectWithoutData"
+                },
+                "example": {
+                  "message": {
+                    "name": "must not be blank"
+                  },
+                  "status": 400
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "security": [
+          {
+            "OnlineTestAuth": []
+          }
+        ],
+        "tags": [
+          "Access"
+        ],
+        "summary": "Get accesses",
+        "description": "Get all access",
+        "responses": {
+          "200": {
+            "description": "Success get all access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithData"
+                },
+                "example": {
+                  "message": "Data found with size 2",
+                  "status": 200,
+                  "data": [
+                    {
+                      "id": 1,
+                      "name": "Private"
+                    },
+                    {
+                      "id": 2,
+                      "name": "Public"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accesses/{accessId}": {
+      "put": {
+        "security": [
+          {
+            "OnlineTestAuth": []
+          }
+        ],
+        "tags": [
+          "Access"
+        ],
+        "summary": "Update access by id",
+        "description": "Update access by id",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AccessId"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MasterRequest"
+              },
+              "examples": {
+                "Success": {
+                  "value": {
+                    "name": "Protected"
+                  }
+                },
+                "Bad request": {
+                  "value": {
+                    "name": ""
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success update access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithData"
+                },
+                "example": {
+                  "message": "Success update access",
+                  "status": 200,
+                  "data": {
+                    "id": 1,
+                    "name": "Protected"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request update access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseObjectWithoutData"
+                },
+                "example": {
+                  "message": {
+                    "name": "must not be blank"
+                  },
+                  "status": 400
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Access not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithoutData"
+                },
+                "example": {
+                  "message": "Data not found",
+                  "status": 404
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "OnlineTestAuth": []
+          }
+        ],
+        "tags": [
+          "Access"
+        ],
+        "summary": "Delete access by id",
+        "description": "Delete access by id",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AccessId"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success delete access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithoutData"
+                },
+                "example": {
+                  "message": "Success delete data",
+                  "status": 204
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Access not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithoutData"
+                },
+                "example": {
+                  "message": "Data not found",
+                  "status": 404
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "security": [
+          {
+            "OnlineTestAuth": []
+          }
+        ],
+        "tags": [
+          "Access"
+        ],
+        "summary": "Get access by id",
+        "description": "Get access by id",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AccessId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success get access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithData"
+                },
+                "example": {
+                  "message": "Data found",
+                  "status": 200,
+                  "data": {
+                    "id": 1,
+                    "name": "Database"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Access not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithoutData"
+                },
+                "example": {
+                  "message": "Data not found",
+                  "status": 404
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/roles": {
+      "post": {
+        "security": [
+          {
+            "OnlineTestAuth": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "Role"
+        ],
+        "summary": "Create new role",
+        "description": "Add new role",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MasterRequest"
+              },
+              "examples": {
+                "Success": {
+                  "value": {
+                    "name": "Private"
+                  }
+                },
+                "Bad request": {
+                  "value": {
+                    "name": ""
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success created new role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithData"
+                },
+                "example": {
+                  "message": "Success created new role",
+                  "status": 201,
+                  "data": {
+                    "id": 1,
+                    "name": "Private"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseObjectWithoutData"
+                },
+                "example": {
+                  "message": {
+                    "name": "must not be blank"
+                  },
+                  "status": 400
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "security": [
+          {
+            "OnlineTestAuth": []
+          }
+        ],
+        "tags": [
+          "Role"
+        ],
+        "summary": "Get rolees",
+        "description": "Get all role",
+        "responses": {
+          "200": {
+            "description": "Success get all role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithData"
+                },
+                "example": {
+                  "message": "Data found with size 2",
+                  "status": 200,
+                  "data": [
+                    {
+                      "id": 1,
+                      "name": "Private"
+                    },
+                    {
+                      "id": 2,
+                      "name": "Public"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/roles/{roleId}": {
+      "put": {
+        "security": [
+          {
+            "OnlineTestAuth": []
+          }
+        ],
+        "tags": [
+          "Role"
+        ],
+        "summary": "Update role by id",
+        "description": "Update role by id",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RoleId"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MasterRequest"
+              },
+              "examples": {
+                "Success": {
+                  "value": {
+                    "name": "Protected"
+                  }
+                },
+                "Bad request": {
+                  "value": {
+                    "name": ""
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success update role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithData"
+                },
+                "example": {
+                  "message": "Success update role",
+                  "status": 200,
+                  "data": {
+                    "id": 1,
+                    "name": "Protected"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request update role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseObjectWithoutData"
+                },
+                "example": {
+                  "message": {
+                    "name": "must not be blank"
+                  },
+                  "status": 400
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Role not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithoutData"
+                },
+                "example": {
+                  "message": "Data not found",
+                  "status": 404
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "OnlineTestAuth": []
+          }
+        ],
+        "tags": [
+          "Role"
+        ],
+        "summary": "Delete role by id",
+        "description": "Delete role by id",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RoleId"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success delete role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithoutData"
+                },
+                "example": {
+                  "message": "Success delete data",
+                  "status": 204
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Role not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithoutData"
+                },
+                "example": {
+                  "message": "Data not found",
+                  "status": 404
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "security": [
+          {
+            "OnlineTestAuth": []
+          }
+        ],
+        "tags": [
+          "Role"
+        ],
+        "summary": "Get role by id",
+        "description": "Get role by id",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RoleId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success get role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithData"
+                },
+                "example": {
+                  "message": "Data found",
+                  "status": 200,
+                  "data": {
+                    "id": 1,
+                    "name": "Database"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Role not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithoutData"
+                },
+                "example": {
+                  "message": "Data not found",
+                  "status": 404
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/difficulties": {
+      "post": {
+        "security": [
+          {
+            "OnlineTestAuth": [
+              "admin"
+            ]
+          }
+        ],
+        "tags": [
+          "Difficulty"
+        ],
+        "summary": "Create new difficulty",
+        "description": "Add new difficulty",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MasterRequest"
+              },
+              "examples": {
+                "Success": {
+                  "value": {
+                    "name": "Easy"
+                  }
+                },
+                "Bad request": {
+                  "value": {
+                    "name": ""
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success created new difficulty",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithData"
+                },
+                "example": {
+                  "message": "Success created new difficulty",
+                  "status": 201,
+                  "data": {
+                    "id": 1,
+                    "name": "Easy"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseObjectWithoutData"
+                },
+                "example": {
+                  "message": {
+                    "name": "must not be blank"
+                  },
+                  "status": 400
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Difficulty"
+        ],
+        "summary": "Get difficulties",
+        "description": "Get all difficulty",
+        "responses": {
+          "200": {
+            "description": "Success get all difficulty",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithData"
+                },
+                "example": {
+                  "message": "Data found with size 2",
+                  "status": 200,
+                  "data": [
+                    {
+                      "id": 1,
+                      "name": "Easy"
+                    },
+                    {
+                      "id": 2,
+                      "name": "Medium"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/difficulties/{difficultyId}": {
+      "put": {
+        "security": [
+          {
+            "OnlineTestAuth": []
+          }
+        ],
+        "tags": [
+          "Difficulty"
+        ],
+        "summary": "Update difficulty by id",
+        "description": "Update difficulty by id",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/DifficultyId"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MasterRequest"
+              },
+              "examples": {
+                "Success": {
+                  "value": {
+                    "name": "Hard"
+                  }
+                },
+                "Bad request": {
+                  "value": {
+                    "name": ""
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success update difficulty",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithData"
+                },
+                "example": {
+                  "message": "Success update difficulty",
+                  "status": 200,
+                  "data": {
+                    "id": 1,
+                    "name": "Hard"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request update difficulty",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseObjectWithoutData"
+                },
+                "example": {
+                  "message": {
+                    "name": "must not be blank"
+                  },
+                  "status": 400
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Difficulty not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithoutData"
+                },
+                "example": {
+                  "message": "Data not found",
+                  "status": 404
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "OnlineTestAuth": []
+          }
+        ],
+        "tags": [
+          "Difficulty"
+        ],
+        "summary": "Delete difficulty by id",
+        "description": "Delete difficulty by id",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/DifficultyId"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success delete difficulty",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithoutData"
+                },
+                "example": {
+                  "message": "Success delete data",
+                  "status": 204
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Difficulty not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithoutData"
+                },
+                "example": {
+                  "message": "Data not found",
+                  "status": 404
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Difficulty"
+        ],
+        "summary": "Get difficulty by id",
+        "description": "Get difficulty by id",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/DifficultyId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success get difficulty",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStringWithData"
+                },
+                "example": {
+                  "message": "Data found",
+                  "status": 200,
+                  "data": {
+                    "id": 1,
+                    "name": "Database"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Difficulty not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -871,6 +1766,54 @@
       },
       "TopicId": {
         "name": "topicId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        },
+        "examples": {
+          "Exist": {
+            "value": "1"
+          },
+          "Not found": {
+            "value": "-1"
+          }
+        }
+      },
+      "AccessId": {
+        "name": "accessId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        },
+        "examples": {
+          "Exist": {
+            "value": "1"
+          },
+          "Not found": {
+            "value": "-1"
+          }
+        }
+      },
+      "RoleId": {
+        "name": "roleId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        },
+        "examples": {
+          "Exist": {
+            "value": "1"
+          },
+          "Not found": {
+            "value": "-1"
+          }
+        }
+      },
+      "DifficultyId": {
+        "name": "difficultyId",
         "in": "path",
         "required": true,
         "schema": {
@@ -968,7 +1911,7 @@
           }
         }
       },
-      "TopicRequest": {
+      "MasterRequest": {
         "type": "object",
         "properties": {
           "name": {

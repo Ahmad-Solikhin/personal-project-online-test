@@ -1,9 +1,8 @@
-package com.gayuh.personalproject.service.topic;
+package com.gayuh.personalproject.service.difficulty;
 
 import com.gayuh.personalproject.dto.MasterRequest;
 import com.gayuh.personalproject.dto.MasterResponse;
 import com.gayuh.personalproject.service.GenericService;
 
-public interface TopicService extends GenericService<MasterResponse, MasterRequest> {
-
+public interface DifficultyService extends GenericService<MasterResponse, MasterRequest> {
 }
