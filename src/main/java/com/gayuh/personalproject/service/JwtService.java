@@ -6,8 +6,10 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
-import org.springframework.context.annotation.Configuration;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Key;
@@ -15,9 +17,11 @@ import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-@Configuration
+@Slf4j
+@Service
 public class JwtService {
-    private static final String SECRET_KEY = "U6xOqiivo/fsQWEFhGQ1osn28gfjPticu9eW1VNapNY=";
+    @Value("${SIGNATURE_KEY}")
+    private String secretKey;
 
     public String generateToken(User user) {
         return Jwts.builder()
@@ -32,10 +36,10 @@ public class JwtService {
                 .compact();
     }
 
-    public UserDetails extractUserFromJwtToken(String jwtToken) {
+    public UserDetails extractUserFromJwtToken(String jwtToken, String secretKey) {
         try {
             Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(getSigninKey())
+                    .setSigningKey(getSigninKey(secretKey))
                     .build()
                     .parseClaimsJws(jwtToken)
                     .getBody();
@@ -57,7 +61,12 @@ public class JwtService {
     }
 
     private Key getSigninKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    private Key getSigninKey(String secretKey) {
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }

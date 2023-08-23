@@ -78,7 +78,7 @@ public class AccessController {
 
         return CustomResponse.generateResponse(
                 ResponseMessage.DELETE_DATA.value(),
-                HttpStatus.NO_CONTENT
+                HttpStatus.OK
         );
     }
 }

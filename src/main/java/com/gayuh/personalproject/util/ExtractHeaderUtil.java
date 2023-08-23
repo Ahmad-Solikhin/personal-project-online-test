@@ -12,12 +12,12 @@ import org.springframework.web.server.ResponseStatusException;
 public class ExtractHeaderUtil {
     private final JwtService jwtService = new JwtService();
 
-    public static UserDetails extractHeader(HttpServletRequest servletRequest) {
+    public static UserDetails extractHeader(HttpServletRequest servletRequest, String secretKey) {
         ExtractHeaderUtil extractHeaderUtil = new ExtractHeaderUtil();
-        return extractHeaderUtil.extract(servletRequest);
+        return extractHeaderUtil.extract(servletRequest, secretKey);
     }
 
-    private UserDetails extract(HttpServletRequest servletRequest) {
+    private UserDetails extract(HttpServletRequest servletRequest, String secretKey) {
         final String jwtToken;
         final String authHeader = servletRequest.getHeader("Authorization");
 
@@ -30,6 +30,6 @@ public class ExtractHeaderUtil {
 
         log.info("Token value : {}", jwtToken);
 
-        return jwtService.extractUserFromJwtToken(jwtToken);
+        return jwtService.extractUserFromJwtToken(jwtToken, secretKey);
     }
 }

@@ -41,7 +41,7 @@ class TopicControllerTest {
 
     @BeforeEach
     void setUp() {
-        topicRepository.deleteAll();
+        topicRepository.deleteAllExceptSeeders();
     }
 
     @Test
@@ -68,9 +68,9 @@ class TopicControllerTest {
             WebResponse<List<MasterResponse>, String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
             });
 
-            assertEquals("Data found with size 10", response.getMessage());
+            assertEquals("Data found with size 12", response.getMessage());
             assertNotNull(response.getData());
-            assertEquals(10, response.getData().size());
+            assertEquals(12, response.getData().size());
         });
     }
 
@@ -218,7 +218,7 @@ class TopicControllerTest {
                 delete("/api/v1/topics/" + topic.getId())
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpectAll(
-                status().isNoContent()
+                status().isOk()
         ).andDo(result -> {
             WebResponse<String, String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
             });

@@ -7,10 +7,7 @@ import com.gayuh.personalproject.entity.ForgetPassword;
 import com.gayuh.personalproject.entity.User;
 import com.gayuh.personalproject.entity.UserVerify;
 import com.gayuh.personalproject.enumerated.ResponseMessage;
-import com.gayuh.personalproject.repository.ForgetPasswordRepository;
-import com.gayuh.personalproject.repository.RoleRepository;
-import com.gayuh.personalproject.repository.UserRepository;
-import com.gayuh.personalproject.repository.UserVerifyRepository;
+import com.gayuh.personalproject.repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +46,8 @@ class AuthControllerTest {
     private ObjectMapper objectMapper;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private QuestionTitleRepository questionTitleRepository;
 
     private User staticUser;
 
@@ -56,6 +55,7 @@ class AuthControllerTest {
     void setUp() {
         forgetPasswordRepository.deleteAll();
         userVerifyRepository.deleteAll();
+        questionTitleRepository.deleteAll();
         userRepository.deleteAll();
 
         staticUser = User.builder()

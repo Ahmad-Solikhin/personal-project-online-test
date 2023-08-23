@@ -6,10 +6,7 @@ import com.gayuh.personalproject.dto.MasterRequest;
 import com.gayuh.personalproject.dto.MasterResponse;
 import com.gayuh.personalproject.dto.WebResponse;
 import com.gayuh.personalproject.entity.Role;
-import com.gayuh.personalproject.repository.ForgetPasswordRepository;
-import com.gayuh.personalproject.repository.RoleRepository;
-import com.gayuh.personalproject.repository.UserRepository;
-import com.gayuh.personalproject.repository.UserVerifyRepository;
+import com.gayuh.personalproject.repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +42,8 @@ class RoleControllerTest {
     private UserRepository userRepository;
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private QuestionTitleRepository questionTitleRepository;
 
     private final Role staticRole = new Role();
 
@@ -52,6 +51,7 @@ class RoleControllerTest {
     void setUp() {
         forgetPasswordRepository.deleteAll();
         userVerifyRepository.deleteAll();
+        questionTitleRepository.deleteAll();
         userRepository.deleteAll();
         roleRepository.deleteAllExceptSeeders();
     }
@@ -230,7 +230,7 @@ class RoleControllerTest {
                 delete("/api/v1/roles/" + role.getId())
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpectAll(
-                status().isNoContent()
+                status().isOk()
         ).andDo(result -> {
             WebResponse<String, String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
             });

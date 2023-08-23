@@ -75,7 +75,7 @@ public class TopicController {
 
         return CustomResponse.generateResponse(
                 ResponseMessage.DELETE_DATA.value(),
-                HttpStatus.NO_CONTENT
+                HttpStatus.OK
         );
     }
 }

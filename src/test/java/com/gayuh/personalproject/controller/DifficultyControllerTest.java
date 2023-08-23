@@ -43,7 +43,7 @@ class DifficultyControllerTest {
 
     @BeforeEach
     void setUp() {
-        difficultyRepository.deleteAll();
+        difficultyRepository.deleteAllExceptSeeders();
     }
 
     @Test
@@ -70,9 +70,9 @@ class DifficultyControllerTest {
             WebResponse<List<MasterResponse>, String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
             });
 
-            assertEquals("Data found with size 10", response.getMessage());
+            assertEquals("Data found with size 12", response.getMessage());
             assertNotNull(response.getData());
-            assertEquals(10, response.getData().size());
+            assertEquals(12, response.getData().size());
         });
     }
 
@@ -220,7 +220,7 @@ class DifficultyControllerTest {
                 delete("/api/v1/difficulties/" + role.getId())
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpectAll(
-                status().isNoContent()
+                status().isOk()
         ).andDo(result -> {
             WebResponse<String, String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
             });
