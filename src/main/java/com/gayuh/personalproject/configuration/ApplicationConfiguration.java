@@ -1,6 +1,5 @@
 package com.gayuh.personalproject.configuration;
 
-import com.gayuh.personalproject.resolver.AdminArgumentResolver;
 import com.gayuh.personalproject.resolver.UserArgumentResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -15,8 +14,6 @@ import java.util.List;
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfiguration implements WebMvcConfigurer {
-
-    private final AdminArgumentResolver adminArgumentResolver;
     private final UserArgumentResolver userArgumentResolver;
 
     @Bean
@@ -27,6 +24,6 @@ public class ApplicationConfiguration implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         WebMvcConfigurer.super.addArgumentResolvers(resolvers);
-        resolvers.addAll(List.of(adminArgumentResolver, userArgumentResolver));
+        resolvers.add(userArgumentResolver);
     }
 }

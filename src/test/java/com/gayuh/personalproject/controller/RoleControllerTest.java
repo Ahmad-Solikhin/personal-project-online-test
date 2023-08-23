@@ -6,7 +6,10 @@ import com.gayuh.personalproject.dto.MasterRequest;
 import com.gayuh.personalproject.dto.MasterResponse;
 import com.gayuh.personalproject.dto.WebResponse;
 import com.gayuh.personalproject.entity.Role;
+import com.gayuh.personalproject.repository.ForgetPasswordRepository;
 import com.gayuh.personalproject.repository.RoleRepository;
+import com.gayuh.personalproject.repository.UserRepository;
+import com.gayuh.personalproject.repository.UserVerifyRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,13 +38,22 @@ class RoleControllerTest {
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
+    private ForgetPasswordRepository forgetPasswordRepository;
+    @Autowired
+    private UserVerifyRepository userVerifyRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
     private ObjectMapper objectMapper;
 
     private final Role staticRole = new Role();
 
     @BeforeEach
     void setUp() {
-        roleRepository.deleteAll();
+        forgetPasswordRepository.deleteAll();
+        userVerifyRepository.deleteAll();
+        userRepository.deleteAll();
+        roleRepository.deleteAllExceptSeeders();
     }
 
     @Test
@@ -68,9 +80,9 @@ class RoleControllerTest {
             WebResponse<List<MasterResponse>, String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
             });
 
-            assertEquals("Data found with size 10", response.getMessage());
+            assertEquals("Data found with size 13", response.getMessage());
             assertNotNull(response.getData());
-            assertEquals(10, response.getData().size());
+            assertEquals(13, response.getData().size());
         });
     }
 

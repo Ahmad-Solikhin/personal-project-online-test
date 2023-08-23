@@ -22,7 +22,7 @@ public enum Role {
 
         List<Role> roles = Arrays.asList(Role.values());
 
-        return roles.stream().filter(role -> role.value.equals(roleValue)).findFirst().orElseThrow(
+        return roles.stream().filter(role -> role.value.equalsIgnoreCase(roleValue)).findFirst().orElseThrow(
                 () -> new IllegalArgumentException("No matching constant for [" + roleValue + "]")
         );
     }

@@ -1,7 +1,6 @@
 package com.gayuh.personalproject.controller;
 
 import com.gayuh.personalproject.util.CustomResponse;
-import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -13,7 +12,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestControllerAdvice
@@ -53,10 +51,19 @@ public class ErrorController {
             ConstraintViolationException exception
     ) {
         log.warn("Error in ConstraintViolationException");
-        Map<String, String> errorMap = exception.getConstraintViolations()
-                .stream().collect(Collectors.toMap(
-                        error -> error.getPropertyPath().toString(), ConstraintViolation::getMessage
-                ));
+        Map<String, String> errorMap = new HashMap<>();
+
+        exception.getConstraintViolations().forEach(error -> {
+            if (errorMap.containsKey(error.getPropertyPath().toString())) {
+                String oldMessage = errorMap.get(error.getPropertyPath().toString());
+                errorMap.put(
+                        error.getPropertyPath().toString(),
+                        oldMessage + " \n" + error.getMessage()
+                );
+            } else {
+                errorMap.put(error.getPropertyPath().toString(), error.getMessage());
+            }
+        });
 
         return CustomResponse.generateResponse(
                 errorMap,
