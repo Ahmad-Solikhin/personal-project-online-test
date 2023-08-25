@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        body {
+            background-color: #f1f1f1;
+            padding-top: 5%;
+        }
+
+        .email-container {
+            background-color: white;
+            height: auto;
+            margin: auto;
+            max-width: 70%;
+            text-align: center;
+            padding-bottom: 50px;
+        }
+
+        .email-table {
+        }
+
+        .subject-message {
+            padding-top: 5%;
+        }
+
+        .message {
+            padding-top: 5%;
+        }
+
+        .email-footer {
+            background-color: #fafafa;
+            height: auto;
+            margin: auto;
+            max-width: 70%;
+            text-align: center;
+            padding-top: 15px;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .btn.btn-primary {
+            border-radius: 5px;
+            background: #1c5397;
+            color: #ffffff;
+        }
+
+        h1, h2, h3, p {
+            font-family: 'Lato', sans-serif;
+            color: #000000;
+            margin-top: 0;
+            font-weight: 400;
+        }
+    </style>
+</head>
+<body>
+<div class="email-container">
+
+    <table class="email-table">
+        <tr>
+            <h1 class="subject-message" th:text="${subjectMessage}">Online Test Account Verification</h1>
+        </tr>
+        <tr>
+            <h3 class="message">Hello Gayuh, please verify your account by click the button below before ....</h3>
+        </tr>
+        <tr>
+            <a style="margin-top: 2%" class="btn btn-primary" th:href="${url}" th:text="${buttonMessage}">Verify</a>
+        </tr>
+    </table>
+</div>
+<div class="email-footer">
+    <table>
+        <tr>
+            <p style="color: lightgrey">© 2023. Online Test. All rights reserved.</p>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
