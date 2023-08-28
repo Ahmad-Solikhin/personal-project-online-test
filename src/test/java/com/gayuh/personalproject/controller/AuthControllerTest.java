@@ -56,7 +56,7 @@ class AuthControllerTest {
         forgetPasswordRepository.deleteAll();
         userVerifyRepository.deleteAll();
         questionTitleRepository.deleteAll();
-        userRepository.deleteAll();
+        userRepository.deleteAllExceptSeeder();
 
         staticUser = User.builder()
                 .email("test@gmail.com")

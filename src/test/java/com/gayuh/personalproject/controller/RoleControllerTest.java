@@ -52,7 +52,7 @@ class RoleControllerTest {
         forgetPasswordRepository.deleteAll();
         userVerifyRepository.deleteAll();
         questionTitleRepository.deleteAll();
-        userRepository.deleteAll();
+        userRepository.deleteAllExceptSeeder();
         roleRepository.deleteAllExceptSeeders();
     }
 
