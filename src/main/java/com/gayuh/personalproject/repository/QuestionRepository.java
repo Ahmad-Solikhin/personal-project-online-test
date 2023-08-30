@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface QuestionRepository extends JpaRepository<Question, Long> {
     @Query(value = """
@@ -25,7 +26,7 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
     @Query(value = """
             select new com.gayuh.personalproject.query.QuestionQuery(
             vw.id,
-            vw.questionTitleId,
+            vw.questionText,
             vw.time,
             vw.score,
             vw.createdAt,
@@ -36,4 +37,26 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
             where vw.questionTitleId = :questionTitleId
             """)
     List<QuestionQuery> getAllQuestionByQuestionTitleId(String questionTitleId);
+    @Query(value = """
+            select q from Question q
+            join QuestionTitle qt on q.questionTitle.id = qt.id
+            left join Media m on q.id = m.question.id
+            where qt.id = :questionTitleId and q.id = :questionId
+            """)
+    Optional<Question> findByQuestionTitleIdAndQuestionId(String questionTitleId, Long questionId);
+    @Query(value = """
+            select new com.gayuh.personalproject.query.QuestionQuery(
+            vw.id,
+            vw.questionText,
+            vw.time,
+            vw.score,
+            vw.createdAt,
+            vw.updatedAt,
+            vw.mediaId
+            )
+            from QuestionView vw
+            where vw.questionTitleId = :questionTitleId
+            and vw.id = :questionId
+            """)
+    Optional<QuestionQuery> getQuestionDetail(String questionTitleId, Long questionId);
 }

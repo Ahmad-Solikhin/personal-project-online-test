@@ -4,14 +4,15 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import java.time.LocalDateTime;
+
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public record QuestionResponse(
-        Long id,
-        String questionText,
+public record UserTestHistoryResponse(
+        String testHistoryId,
+        Double score,
+        LocalDateTime startedAt,
+        LocalDateTime finishedAt,
         Integer time,
-        Integer score,
-        LocalDateTime createdAt,
-        LocalDateTime updatedAt,
-        String mediaId
+        String name,
+        String email
 ) {
 }

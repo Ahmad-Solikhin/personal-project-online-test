@@ -70,9 +70,9 @@ class DifficultyControllerTest {
             WebResponse<List<MasterResponse>, String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
             });
 
-            assertEquals("Data found with size 12", response.getMessage());
+            assertEquals("Data found with size 13", response.getMessage());
             assertNotNull(response.getData());
-            assertEquals(12, response.getData().size());
+            assertEquals(13, response.getData().size());
         });
     }
 

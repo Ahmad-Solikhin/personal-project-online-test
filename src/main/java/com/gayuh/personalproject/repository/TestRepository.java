@@ -15,4 +15,10 @@ public interface TestRepository extends JpaRepository<Test, String> {
             delete from Test t where t.question.id in :idQuestions
             """)
     void deleteAllTestByQuestionId(List<Long> idQuestions);
+
+    @Modifying
+    @Query(value = """
+            delete from Test t where t.question.id = :questionId
+            """)
+    void deleteTestByQuestionId(Long questionId);
 }

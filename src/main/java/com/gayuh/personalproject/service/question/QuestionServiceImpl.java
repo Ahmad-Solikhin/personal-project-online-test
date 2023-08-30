@@ -2,18 +2,19 @@ package com.gayuh.personalproject.service.question;
 
 import com.gayuh.personalproject.dto.*;
 import com.gayuh.personalproject.entity.*;
-import com.gayuh.personalproject.enumerated.ResponseMessage;
+import com.gayuh.personalproject.query.QuestionQuery;
 import com.gayuh.personalproject.query.QuestionTitleQuery;
 import com.gayuh.personalproject.repository.*;
 import com.gayuh.personalproject.service.ParentService;
+import com.gayuh.personalproject.service.storage.StorageService;
 import com.gayuh.personalproject.util.PaginationUtil;
+import com.gayuh.personalproject.util.ResponseStatusExceptionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,6 +32,7 @@ public class QuestionServiceImpl extends ParentService implements QuestionServic
     private final TestRepository testRepository;
     private final TestHistoryRepository testHistoryRepository;
     private final ChoiceRepository choiceRepository;
+    private final StorageService storageService;
 
     @Override
     public PaginationResponse<QuestionTitleResponse> getAllPublicQuestionTitle(
@@ -54,6 +56,7 @@ public class QuestionServiceImpl extends ParentService implements QuestionServic
                 difficultyId,
                 pageRequest
         );
+
 
         List<QuestionTitleResponse> questionTitleResponses = setPageQuestionTitleQueryToListQuestionTitleResponse(queries);
 
@@ -102,7 +105,7 @@ public class QuestionServiceImpl extends ParentService implements QuestionServic
     }
 
     @Override
-    public QuestionTitleDetailResponse getQuestionDetail(String questionTitleId) {
+    public QuestionTitleDetailResponse getQuestionTitleDetail(String questionTitleId) {
         QuestionTitleQuery query = getQuestionTitleQueryById(questionTitleId);
 
         return new QuestionTitleDetailResponse(
@@ -159,7 +162,7 @@ public class QuestionServiceImpl extends ParentService implements QuestionServic
 
             choiceRepository.deleteAllChoiceByQuestionId(idQuestions);
 
-            //Todo : media service to delete all media by idQuestions and unlink all document
+            storageService.deleteAllImageByQuestionTitleId(questionTitleId);
         }
 
         testHistoryRepository.deleteAllTestHistoryByQuestionTitleId(questionTitleId);
@@ -171,16 +174,133 @@ public class QuestionServiceImpl extends ParentService implements QuestionServic
 
     @Override
     public List<QuestionResponse> getAllQuestionByQuestionTitleId(String questionTitleId) {
+        getQuestionTitleDetail(questionTitleId);
 
         return questionRepository.getAllQuestionByQuestionTitleId(questionTitleId)
                 .stream().map(questionQuery -> new QuestionResponse(
                         questionQuery.id(),
+                        questionQuery.questionText(),
                         questionQuery.time(),
                         questionQuery.score(),
                         questionQuery.createdAt(),
                         questionQuery.updatedAt(),
                         questionQuery.mediaId()
                 )).toList();
+    }
+
+    @Override
+    public String addQuestionByQuestionTitleId(
+            String questionTitleId,
+            MultipartFile file,
+            QuestionRequest request,
+            UserObject userObject
+    ) {
+        validationService.validate(request);
+
+        QuestionTitle questionTitle = getQuestionTitleById(questionTitleId);
+
+        if (!questionTitle.getUser().getEmail().equals(userObject.email())) {
+            ResponseStatusExceptionUtil.unauthorizedVoid();
+        }
+
+        Question question = Question.builder()
+                .questionText(request.questionText())
+                .time(request.time())
+                .score(request.score())
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .questionTitle(questionTitle)
+                .build();
+
+        questionRepository.save(question);
+
+        if (file != null) {
+            storageService.saveImageQuestion(file, question);
+        }
+
+        return question.getId().toString();
+    }
+
+    @Override
+    public String updateQuestionByQuestionTitleId(
+            String questionTitleId,
+            Long questionId,
+            MultipartFile file,
+            QuestionRequest request,
+            UserObject userObject) {
+        validationService.validate(request);
+
+        Question question = getQuestionByIdAndQuestionTitleId(questionId, questionTitleId);
+
+        if (file != null && (file.isEmpty())) file = null;
+
+        if (question.getMedia() != null && file != null) {
+            storageService.updateImageQuestion(file, question.getMedia().getId());
+        } else if (question.getMedia() == null && file != null) {
+            storageService.saveImageQuestion(file, question);
+        } else if (question.getMedia() != null) {
+            storageService.deleteImageQuestion(question.getMedia().getId());
+        }
+
+        question.setQuestionText(request.questionText());
+        question.setTime(request.time());
+        question.setScore(request.score());
+        question.setUpdatedAt(LocalDateTime.now());
+        questionRepository.save(question);
+
+        return question.getId().toString();
+    }
+
+    @Override
+    public QuestionResponse getQuestionDetail(String questionTitleId, Long questionId, UserObject userObject) {
+        QuestionQuery query = questionRepository.getQuestionDetail(questionTitleId, questionId).orElseThrow(
+                ResponseStatusExceptionUtil::notFound
+        );
+
+        return new QuestionResponse(query.id(), query.questionText(), query.time(), query.score(), query.createdAt(), query.updatedAt(), query.mediaId());
+    }
+
+    @Override
+    public void deleteQuestion(String questionTitleId, Long questionId, UserObject userObject) {
+        Question question = getQuestionByIdAndQuestionTitleId(questionId, questionTitleId);
+
+        testRepository.deleteTestByQuestionId(questionId);
+        if (question.getMedia() != null) storageService.deleteImageQuestion(question.getMedia().getId());
+        choiceRepository.deleteChoiceByQuestionId(questionId);
+        questionRepository.delete(question);
+    }
+
+    @Override
+    public void addChoice(String questionTitleId, Long questionId, ChoiceRequest request, UserObject userObject) {
+        validationService.validate(request);
+        Question question = getQuestionByIdAndQuestionTitleId(questionId, questionTitleId);
+        Choice choice = Choice.builder()
+                .question(question)
+                .correct(request.correct())
+                .choiceText(request.choiceText())
+                .build();
+
+        choiceRepository.save(choice);
+    }
+
+    @Override
+    public List<ChoiceResponse> getAllChoice(String questionTitleId, Long questionId, UserObject userObject) {
+        return choiceRepository.findAllChoiceByQuestionTitleIdAndQuestionId(questionTitleId, questionId);
+    }
+
+    @Override
+    public void updateChoice(String questionTitleId, Long questionId, Long choiceId, ChoiceRequest request, UserObject userObject) {
+        validationService.validate(request);
+        Choice choice = getChoiceByQuestionTitleIdAndQuestionIdAndChoiceId(questionTitleId, questionId, choiceId);
+        choice.setChoiceText(request.choiceText());
+        choice.setCorrect(request.correct());
+        choiceRepository.save(choice);
+    }
+
+    @Override
+    public void deleteChoice(String questionTitleId, Long questionId, Long choiceId, UserObject userObject) {
+        Choice choice = getChoiceByQuestionTitleIdAndQuestionIdAndChoiceId(questionTitleId, questionId, choiceId);
+        choiceRepository.delete(choice);
     }
 
     private List<QuestionTitleResponse> setPageQuestionTitleQueryToListQuestionTitleResponse(
@@ -193,13 +313,13 @@ public class QuestionServiceImpl extends ParentService implements QuestionServic
 
     private void checkAccessUser(UserObject userObject, QuestionTitleQuery query) {
         if (!userObject.id().equals(query.userId())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, ResponseMessage.UNAUTHORIZED.value());
+            ResponseStatusExceptionUtil.unauthorizedVoid();
         }
     }
 
     private QuestionTitleQuery getQuestionTitleQueryById(String questionTitleId) {
         return questionTitleRepository.getDetailQuestionTitle(questionTitleId).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, ResponseMessage.DATA_NOT_FOUND.value())
+                ResponseStatusExceptionUtil::notFound
         );
     }
 
@@ -226,10 +346,10 @@ public class QuestionServiceImpl extends ParentService implements QuestionServic
             questionTitle.setUser(getUserByEmail(userObject.email()));
         }
 
+        questionTitle.setAccess(getAccessById(request.accessId()));
         questionTitle.setTitle(request.title());
         questionTitle.setUpdatedAt(LocalDateTime.now());
         questionTitle.setTopic(getTopicById(request.topicId()));
-        questionTitle.setAccess(getAccessById(request.accessId()));
         questionTitle.setDifficulty(getDifficultyById(request.difficultyId()));
 
         return questionTitle;
@@ -237,31 +357,52 @@ public class QuestionServiceImpl extends ParentService implements QuestionServic
 
     private User getUserByEmail(String email) {
         return userRepository.getUserByEmail(email).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, ResponseMessage.DATA_NOT_FOUND.value())
+                ResponseStatusExceptionUtil::notFound
         );
     }
 
     private User getUserById(String userId) {
         return userRepository.getUserById(userId).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, ResponseMessage.DATA_NOT_FOUND.value())
+                ResponseStatusExceptionUtil::notFound
         );
     }
 
     private Topic getTopicById(Long topicId) {
         return topicRepository.findById(topicId).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, ResponseMessage.DATA_NOT_FOUND.value())
+                ResponseStatusExceptionUtil::notFound
         );
     }
 
     private Access getAccessById(Long accessId) {
         return accessRepository.findById(accessId).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, ResponseMessage.DATA_NOT_FOUND.value())
+                ResponseStatusExceptionUtil::notFound
         );
     }
 
     private Difficulty getDifficultyById(Long difficultyId) {
         return difficultyRepository.findById(difficultyId).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, ResponseMessage.DATA_NOT_FOUND.value())
+                ResponseStatusExceptionUtil::notFound
         );
+    }
+
+    private QuestionTitle getQuestionTitleById(String questionTitleId) {
+        return questionTitleRepository.findById(questionTitleId).orElseThrow(
+                ResponseStatusExceptionUtil::notFound
+        );
+    }
+
+    private Question getQuestionByIdAndQuestionTitleId(Long questionId, String questionTitleId) {
+        return questionRepository.findByQuestionTitleIdAndQuestionId(questionTitleId, questionId).orElseThrow(
+                ResponseStatusExceptionUtil::notFound
+        );
+    }
+
+    private Choice getChoiceByQuestionTitleIdAndQuestionIdAndChoiceId(
+            String questionTitleId,
+            Long questionId,
+            Long choiceId
+    ) {
+        return choiceRepository.findChoiceByQuestionTitleIdAndQuestionIdAndChoiceId(questionTitleId, questionId, choiceId)
+                .orElseThrow(ResponseStatusExceptionUtil::notFound);
     }
 }

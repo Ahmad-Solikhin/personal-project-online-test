@@ -23,12 +23,12 @@ spring:
     multipart:
       enabled: true
       file-size-threshold: 2MB
-      max-file-size: 2MB
-      max-request-size: 10MB
+      max-file-size: 5MB
+      max-request-size: 5MB
 
 server:
   port: 8080
 
 SIGNATURE_KEY: U6xOqiivo/fsQWEFhGQ1osn28gfjPticu9eW1VNapNY=
 
-SEEDER_TOKEN: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjgxYTE5ZGQ4LWJjMDgtNDM4ZC05YzBjLTk3MWMxOWRmN2YyMSIsInJvbGUiOiJBZG1pbiIsInN1YiI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5MzA1OTc5NiwiZXhwIjoxNzI0NTk1Nzk2fQ.Axxvy8mAsCQn57Lobhe8we2ZIwaRigCNirbEfVQLnvA
+SEEDER_TOKEN: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6Ijc0ZDU2ZTFkLTU3N2MtNDRkMi04MGNkLTM0NzkwOTAwNWRhMCIsInJvbGUiOiJBZG1pbiIsInN1YiI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5MzI5OTIyNywiZXhwIjoxNzI0ODM1MjI3fQ.FdcWDF0AWBqMy7pedqt0iMoF7jHTEP5gOd_Or7cv3Mw

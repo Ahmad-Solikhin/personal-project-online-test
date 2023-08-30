@@ -3,6 +3,7 @@ package com.gayuh.personalproject.controller;
 import com.gayuh.personalproject.util.CustomResponse;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -67,6 +68,18 @@ public class ErrorController {
 
         return CustomResponse.generateResponse(
                 errorMap,
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
+    @ExceptionHandler(value = SizeLimitExceededException.class)
+    public ResponseEntity<Object> sizeLimitExceededException(
+            SizeLimitExceededException exception
+    ) {
+        log.warn("Error in SizeLimitExceededException");
+
+        return CustomResponse.generateResponse(
+                "size exceeded limit of 5MB",
                 HttpStatus.BAD_REQUEST
         );
     }
