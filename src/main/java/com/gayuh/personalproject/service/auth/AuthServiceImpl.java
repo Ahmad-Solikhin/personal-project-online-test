@@ -9,6 +9,7 @@ import com.gayuh.personalproject.entity.Role;
 import com.gayuh.personalproject.entity.User;
 import com.gayuh.personalproject.entity.UserVerify;
 import com.gayuh.personalproject.enumerated.ResponseMessage;
+import com.gayuh.personalproject.query.UserQuery;
 import com.gayuh.personalproject.repository.ForgetPasswordRepository;
 import com.gayuh.personalproject.repository.RoleRepository;
 import com.gayuh.personalproject.repository.UserRepository;
@@ -37,23 +38,23 @@ public class AuthServiceImpl extends ParentService implements AuthService {
 
     @Override
     public String login(LoginRequest request) {
-        User user = userRepository.getUserByEmail(request.email()).orElseThrow(
+        UserQuery query = userRepository.findUserQueryByEmail(request.email()).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, ResponseMessage.LOGIN_FAILED.value())
         );
 
-        if (!passwordEncoder.matches(request.password(), user.getPassword())) {
+        if (!passwordEncoder.matches(request.password(), query.password())) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ResponseMessage.LOGIN_FAILED.value());
         }
 
-        if (Boolean.TRUE.equals(user.getSuspend())) {
+        if (Boolean.TRUE.equals(query.suspend())) {
             throw new ResponseStatusException(HttpStatus.LOCKED, ResponseMessage.ACCOUNT_SUSPEND.value());
         }
 
-        if (Boolean.FALSE.equals(user.getActivated())) {
+        if (Boolean.FALSE.equals(query.activated())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, ResponseMessage.ACCOUNT_INACTIVE.value());
         }
 
-        return jwtService.generateToken(user);
+        return jwtService.generateToken(query);
     }
 
     @Override
@@ -70,6 +71,8 @@ public class AuthServiceImpl extends ParentService implements AuthService {
 
         Role role = roleRepository.findById(2L).orElseThrow();
 
+        LocalDateTime currentTime = LocalDateTime.now();
+
         User user = User.builder()
                 .role(role)
                 .name(request.name())
@@ -77,8 +80,8 @@ public class AuthServiceImpl extends ParentService implements AuthService {
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
                 .activated(false)
-                .updatedAt(LocalDateTime.now())
-                .createdAt(LocalDateTime.now())
+                .updatedAt(currentTime)
+                .createdAt(currentTime)
                 .build();
         userRepository.save(user);
 

@@ -1,5 +1,6 @@
-package com.gayuh.personalproject.service.testHistory;
+package com.gayuh.personalproject.service.testhistory;
 
+import com.gayuh.personalproject.dto.PaginationRequest;
 import com.gayuh.personalproject.dto.PaginationResponse;
 import com.gayuh.personalproject.dto.TestHistoryResponse;
 import com.gayuh.personalproject.dto.UserTestHistoryResponse;
@@ -20,15 +21,13 @@ public class TestHistoryServiceImpl implements TestHistoryService {
 
     @Override
     public PaginationResponse<UserTestHistoryResponse> getTestHistoryByQuestionTitleId(
-            String questionTitleId, Integer page,
-            String sort, String sortBy,
-            String search, Integer row
+            String questionTitleId, PaginationRequest pagination
     ) {
-        Sort sort1 = PaginationUtil.getSort(sort, sortBy);
+        Sort sort1 = PaginationUtil.getSort(pagination.getSort(), pagination.getSortBy());
 
-        search = "%" + search + "%";
+        String search = "%" + pagination.getSearch() + "%";
 
-        PageRequest pageRequest = PaginationUtil.getPageRequest(page, row, sort1);
+        PageRequest pageRequest = PaginationUtil.getPageRequest(pagination.getPage(), pagination.getRow(), sort1);
 
         Page<UserTestHistoryResponse> queries = testHistoryRepository.findAllTestHistoryByQuestionTitleId(
                 questionTitleId, search, pageRequest
@@ -40,26 +39,23 @@ public class TestHistoryServiceImpl implements TestHistoryService {
                 response,
                 (int) queries.getTotalElements(),
                 queries.getTotalPages(),
-                page
+                pagination.getPage()
         );
     }
 
     @Override
     public PaginationResponse<TestHistoryResponse> getTestHistoryByUserId(
-            Integer page, String sort,
-            String sortBy, String search,
-            Long topicId, Long difficultyId,
-            Integer row, String userId
+            String userId, PaginationRequest pagination
     ) {
 
-        Sort sort1 = PaginationUtil.getSort(sort, sortBy);
+        Sort sort1 = PaginationUtil.getSort(pagination.getSort(), pagination.getSortBy());
 
-        search = "%" + search + "%";
+        String search = "%" + pagination.getSearch() + "%";
 
-        PageRequest pageRequest = PaginationUtil.getPageRequest(page, row, sort1);
+        PageRequest pageRequest = PaginationUtil.getPageRequest(pagination.getPage(), pagination.getRow(), sort1);
 
         Page<TestHistoryResponse> queries = testHistoryRepository.findAllTestHistoryByUserIdWithPage(
-                search, topicId, difficultyId, userId, pageRequest
+                search, pagination.getTopicId(), pagination.getDifficultyId(), userId, pageRequest
         );
 
         List<TestHistoryResponse> responses = queries.stream().toList();
@@ -68,7 +64,7 @@ public class TestHistoryServiceImpl implements TestHistoryService {
                 responses,
                 (int) queries.getTotalElements(),
                 queries.getTotalPages(),
-                page
+                pagination.getPage()
         );
     }
 }

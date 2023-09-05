@@ -33,7 +33,7 @@ public interface QuestionTitleRepository extends JpaRepository<QuestionTitle, St
             from QuestionTitleView vw
             where vw.id = :id
             """)
-    Optional<QuestionTitleQuery> getDetailQuestionTitle(String id);
+    Optional<QuestionTitleQuery> findQuestionTitleQuery(String id);
 
     @Modifying
     @Query(value = """
@@ -95,4 +95,27 @@ public interface QuestionTitleRepository extends JpaRepository<QuestionTitle, St
             and case when (:accessId != 0) then (vw.accessId = :accessId) else (vw.accessId != 0) end
             """)
     Page<QuestionTitleQuery> findAllQuestionTitleCreatedByUserWithPageResult(String userId, String search, Long topicId, Long difficultyId, Long accessId, PageRequest pageRequest);
+    @Query(value = """
+            select
+            new com.gayuh.personalproject.query.QuestionTitleQuery(
+            vw.id,
+            vw.title,
+            vw.token,
+            vw.started,
+            vw.createdAt as recent,
+            vw.updatedAt,
+            vw.userId,
+            vw.userName,
+            vw.topicId,
+            vw.topicName,
+            vw.difficultyId,
+            vw.difficultyName,
+            vw.accessId,
+            vw.accessName,
+            vw.tested
+            )
+            from QuestionTitleView vw
+            where vw.token = :token
+            """)
+    Optional<QuestionTitleQuery> findQuestionTitleQueryByToken(String token);
 }

@@ -1,7 +1,7 @@
 package com.gayuh.personalproject.service;
 
 import com.gayuh.personalproject.dto.UserDetails;
-import com.gayuh.personalproject.entity.User;
+import com.gayuh.personalproject.query.UserQuery;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -23,13 +23,13 @@ public class JwtService {
     @Value("${SIGNATURE_KEY}")
     private String secretKey;
 
-    public String generateToken(User user) {
+    public String generateToken(UserQuery user) {
         return Jwts.builder()
                 .setClaims(Map.of(
-                        "role", user.getRole().getName(),
-                        "id", user.getId()
+                        "role", user.role(),
+                        "id", user.id()
                 ))
-                .setSubject(user.getEmail())
+                .setSubject(user.email())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(2)))
                 .signWith(getSigninKey(), SignatureAlgorithm.HS256)
