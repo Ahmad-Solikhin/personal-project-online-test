@@ -2,7 +2,7 @@ package com.gayuh.personalproject.controller;
 
 import com.gayuh.personalproject.dto.*;
 import com.gayuh.personalproject.enumerated.ResponseMessage;
-import com.gayuh.personalproject.service.testHistory.TestHistoryService;
+import com.gayuh.personalproject.service.testhistory.TestHistoryService;
 import com.gayuh.personalproject.util.CustomResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,8 +35,16 @@ public class TestHistoryController {
             @RequestParam(name = "row", required = false, defaultValue = "10") Integer row,
             UserObject userObject
     ) {
+        PaginationRequest pagination = PaginationRequest.builder()
+                .page(page)
+                .sort(sort)
+                .sortBy(sortBy)
+                .search(search)
+                .row(row)
+                .build();
+
         PaginationResponse<UserTestHistoryResponse> response = testHistoryService.getTestHistoryByQuestionTitleId(
-                questionTitleId, page, sort, sortBy, search, row
+                questionTitleId, pagination
         );
 
         return CustomResponse.generateResponse(
@@ -52,13 +60,23 @@ public class TestHistoryController {
             @RequestParam(name = "sort", required = false, defaultValue = "desc") String sort,
             @RequestParam(name = "sortBy", required = false, defaultValue = "finishedAt") String sortBy,
             @RequestParam(name = "search", required = false, defaultValue = "") String search,
-            @RequestParam(name = "topic", required = false, defaultValue = "0") Long topicId,
-            @RequestParam(name = "difficulty", required = false, defaultValue = "0") Long difficultyId,
+            @RequestParam(name = "topic", required = false, defaultValue = "") Long topicId,
+            @RequestParam(name = "difficulty", required = false, defaultValue = "") Long difficultyId,
             @RequestParam(name = "row", required = false, defaultValue = "10") Integer row,
             UserObject userObject
     ) {
+        PaginationRequest pagination = PaginationRequest.builder()
+                .page(page)
+                .sortBy(sortBy)
+                .sort(sort)
+                .search(search)
+                .topicId(topicId)
+                .difficultyId(difficultyId)
+                .row(row)
+                .build();
+
         PaginationResponse<TestHistoryResponse> response = testHistoryService.getTestHistoryByUserId(
-                page, sort, sortBy, search, topicId, difficultyId, row, userObject.id()
+                userObject.id(), pagination
         );
 
         return CustomResponse.generateResponse(

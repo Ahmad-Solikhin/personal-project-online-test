@@ -29,8 +29,8 @@ public interface TestHistoryRepository extends JpaRepository<TestHistory, String
             join Difficulty d on qt.difficulty.id = d.id
             where u.id = :userId
             and lower(qt.title) like lower(:search)
-            and case when (:topicId != 0) then (t.id = :topicId) else (t.id != 0) end
-            and case when (:difficultyId != 0) then (d.id = :difficultyId) else (d.id != 0) end
+            and t.id = COALESCE(:topicId, t.id)
+            and d.id = COALESCE(:difficultyId, d.id)
             """)
     Page<TestHistoryResponse> findAllTestHistoryByUserIdWithPage(String search, Long topicId, Long difficultyId, String userId, PageRequest pageRequest);
 
@@ -46,7 +46,7 @@ public interface TestHistoryRepository extends JpaRepository<TestHistory, String
             )
             from TestHistoryView vw
             where vw.questionTitleId = :questionTitleId
-            and lower(vw.title) like lower(:search) 
+            and lower(vw.title) like lower(:search)
             """)
     Page<UserTestHistoryResponse> findAllTestHistoryByQuestionTitleId(String questionTitleId, String search, PageRequest pageRequest);
 }

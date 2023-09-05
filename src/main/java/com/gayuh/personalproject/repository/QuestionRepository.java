@@ -36,7 +36,7 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
             from QuestionView vw
             where vw.questionTitleId = :questionTitleId
             """)
-    List<QuestionQuery> getAllQuestionByQuestionTitleId(String questionTitleId);
+    List<QuestionQuery> findAllQuestionByQuestionTitleId(String questionTitleId);
     @Query(value = """
             select q from Question q
             join QuestionTitle qt on q.questionTitle.id = qt.id
@@ -58,5 +58,5 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
             where vw.questionTitleId = :questionTitleId
             and vw.id = :questionId
             """)
-    Optional<QuestionQuery> getQuestionDetail(String questionTitleId, Long questionId);
+    Optional<QuestionQuery> findQuestionQuery(String questionTitleId, Long questionId);
 }
