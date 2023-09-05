@@ -32,4 +32,4 @@ build/
 ### VS Code ###
 .vscode/
 /src/main/resources/static/
-/src/main/java/com/gayuh/personalproject/controller/TestController.java
+/src/main/java/com/gayuh/personalproject/controller/TestingController.java
