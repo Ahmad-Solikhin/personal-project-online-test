@@ -15,7 +15,9 @@ public class Test {
     @Column(name = "test_id")
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-    private Integer answer;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "choice_id")
+    private Choice choice;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id")
     private Question question;

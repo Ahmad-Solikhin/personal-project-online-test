@@ -48,6 +48,16 @@ class AuthControllerTest {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private QuestionTitleRepository questionTitleRepository;
+    @Autowired
+    private QuestionRepository questionRepository;
+    @Autowired
+    private TestRepository testRepository;
+    @Autowired
+    private TestHistoryRepository testHistoryRepository;
+    @Autowired
+    private ChoiceRepository choiceRepository;
+    @Autowired
+    private MediaRepository mediaRepository;
 
     private User staticUser;
 
@@ -55,6 +65,11 @@ class AuthControllerTest {
     void setUp() {
         forgetPasswordRepository.deleteAll();
         userVerifyRepository.deleteAll();
+        testRepository.deleteAll();
+        testHistoryRepository.deleteAll();
+        choiceRepository.deleteAll();
+        mediaRepository.deleteAll();
+        questionRepository.deleteAll();
         questionTitleRepository.deleteAll();
         userRepository.deleteAllExceptSeeder();
 

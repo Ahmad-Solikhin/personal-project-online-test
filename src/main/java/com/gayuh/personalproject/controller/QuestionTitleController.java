@@ -6,6 +6,7 @@ import com.gayuh.personalproject.service.questiontitle.QuestionTitleService;
 import com.gayuh.personalproject.util.CustomResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class QuestionTitleController {
     private static final String QUESTION_TITLE_DETAIL_URL = "question-titles/";
+    @Value("${BASE_URL}")
+    private String baseUrl;
 
     private final QuestionTitleService questionTitleService;
 
@@ -141,7 +144,7 @@ public class QuestionTitleController {
         return CustomResponse.generateResponse(
                 ResponseMessage.CREATE_DATA.value(),
                 HttpStatus.CREATED,
-                Map.of("link", QUESTION_TITLE_DETAIL_URL + response)
+                Map.of("link", baseUrl + QUESTION_TITLE_DETAIL_URL + response)
         );
     }
 
@@ -159,7 +162,7 @@ public class QuestionTitleController {
         return CustomResponse.generateResponse(
                 ResponseMessage.UPDATE_DATA.value(),
                 HttpStatus.OK,
-                Map.of("link", QUESTION_TITLE_DETAIL_URL + response)
+                Map.of("link", baseUrl + QUESTION_TITLE_DETAIL_URL + response)
         );
     }
 
@@ -196,7 +199,7 @@ public class QuestionTitleController {
         return CustomResponse.generateResponse(
                 "Success share question title",
                 HttpStatus.OK,
-                "question-titles?token=" + token
+                baseUrl + "question-titles?token=" + token
         );
     }
 }

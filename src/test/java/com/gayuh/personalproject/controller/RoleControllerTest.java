@@ -44,6 +44,16 @@ class RoleControllerTest {
     private ObjectMapper objectMapper;
     @Autowired
     private QuestionTitleRepository questionTitleRepository;
+    @Autowired
+    private QuestionRepository questionRepository;
+    @Autowired
+    private TestRepository testRepository;
+    @Autowired
+    private TestHistoryRepository testHistoryRepository;
+    @Autowired
+    private ChoiceRepository choiceRepository;
+    @Autowired
+    private MediaRepository mediaRepository;
 
     private final Role staticRole = new Role();
 
@@ -51,6 +61,11 @@ class RoleControllerTest {
     void setUp() {
         forgetPasswordRepository.deleteAll();
         userVerifyRepository.deleteAll();
+        testRepository.deleteAll();
+        testHistoryRepository.deleteAll();
+        choiceRepository.deleteAll();
+        mediaRepository.deleteAll();
+        questionRepository.deleteAll();
         questionTitleRepository.deleteAll();
         userRepository.deleteAllExceptSeeder();
         roleRepository.deleteAllExceptSeeders();

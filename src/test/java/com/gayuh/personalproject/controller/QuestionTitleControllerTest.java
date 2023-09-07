@@ -42,6 +42,14 @@ class QuestionTitleControllerTest {
     private UserVerifyRepository userVerifyRepository;
     @Autowired
     private ForgetPasswordRepository forgetPasswordRepository;
+    @Autowired
+    private TestRepository testRepository;
+    @Autowired
+    private TestHistoryRepository testHistoryRepository;
+    @Autowired
+    private ChoiceRepository choiceRepository;
+    @Autowired
+    private MediaRepository mediaRepository;
     private String staticLinkQuestionTitleById;
 
     @Value("${SEEDER_TOKEN}")
@@ -51,8 +59,12 @@ class QuestionTitleControllerTest {
     void setUp() {
         userVerifyRepository.deleteAll();
         forgetPasswordRepository.deleteAll();
-        questionTitleRepository.deleteAll();
+        testRepository.deleteAll();
+        testHistoryRepository.deleteAll();
+        choiceRepository.deleteAll();
+        mediaRepository.deleteAll();
         questionRepository.deleteAll();
+        questionTitleRepository.deleteAll();
         userRepository.deleteAllExceptSeeder();
     }
 
@@ -196,7 +208,7 @@ class QuestionTitleControllerTest {
         createQuestionTitleSuccess();
 
         mockMvc.perform(
-                get("/api/v1/" + staticLinkQuestionTitleById)
+                get(staticLinkQuestionTitleById)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
         ).andExpectAll(
@@ -242,7 +254,7 @@ class QuestionTitleControllerTest {
         String requestString = objectMapper.writeValueAsString(request);
 
         mockMvc.perform(
-                put("/api/v1/" + staticLinkQuestionTitleById)
+                put(staticLinkQuestionTitleById)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestString)
@@ -270,7 +282,7 @@ class QuestionTitleControllerTest {
         String requestString = objectMapper.writeValueAsString(request);
 
         mockMvc.perform(
-                put("/api/v1/" + staticLinkQuestionTitleById)
+                put(staticLinkQuestionTitleById)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestString)
@@ -286,7 +298,7 @@ class QuestionTitleControllerTest {
             assertNull(response.getData());
         });
     }
-    
+
     @Test
     void updateQuestionTitleUnauthorize() throws Exception {
         createQuestionTitleSuccess();
@@ -298,7 +310,7 @@ class QuestionTitleControllerTest {
         String requestString = objectMapper.writeValueAsString(request);
 
         mockMvc.perform(
-                put("/api/v1/" + staticLinkQuestionTitleById)
+                put(staticLinkQuestionTitleById)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestString)

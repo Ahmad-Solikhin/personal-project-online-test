@@ -33,3 +33,5 @@ build/
 .vscode/
 /src/main/resources/static/
 /src/main/java/com/gayuh/personalproject/controller/TestingController.java
+/src/main/resources/templates/emailtemplate-2.html
+/src/main/java/com/gayuh/personalproject/service/TestingService.java

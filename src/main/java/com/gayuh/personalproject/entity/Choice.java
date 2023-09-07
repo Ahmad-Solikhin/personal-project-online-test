@@ -3,6 +3,8 @@ package com.gayuh.personalproject.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
@@ -22,4 +24,6 @@ public class Choice {
     @ManyToOne
     @JoinColumn(name = "question_id")
     private Question question;
+    @OneToMany(mappedBy = "choice")
+    private List<Test> tests;
 }

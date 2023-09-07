@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 public class TestHistoryController {
 
     private final TestHistoryService testHistoryService;
-    //Test histories Start
 
     /**
      * Get all test histories who already finished the question title user created using pagination
@@ -86,5 +85,17 @@ public class TestHistoryController {
         );
     }
 
-    //Test histories End
+    @GetMapping(value = "test-histories/{testHistoryId}")
+    public ResponseEntity<Object> getTestHistoryDetail(
+            @PathVariable(name = "testHistoryId") String testHistoryId,
+            UserObject userObject
+    ) {
+        TestHistoryDetailResponse response = testHistoryService.getTestHistoryDetail(testHistoryId, userObject);
+
+        return CustomResponse.generateResponse(
+                ResponseMessage.GET_DATA.value(),
+                HttpStatus.OK,
+                response
+        );
+    }
 }

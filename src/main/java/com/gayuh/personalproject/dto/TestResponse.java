@@ -3,15 +3,15 @@ package com.gayuh.personalproject.dto;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
-import java.time.LocalDateTime;
+import java.util.List;
+
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public record QuestionResponse(
-        Long id,
+public record TestResponse(
+        String questionTitleId,
+        Long questionId,
         String questionText,
         Integer time,
-        Integer score,
-        LocalDateTime createdAt,
-        LocalDateTime updatedAt,
-        String mediaLink
+        String mediaLink,
+        List<TestChoiceResponse> choices
 ) {
 }

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record ChoiceResponse(
         Long id,
-        String choiceTest,
+        String choiceText,
         Boolean correct
 ) {
 }

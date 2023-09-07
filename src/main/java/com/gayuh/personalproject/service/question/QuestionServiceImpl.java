@@ -14,6 +14,7 @@ import com.gayuh.personalproject.service.ParentService;
 import com.gayuh.personalproject.service.storage.StorageService;
 import com.gayuh.personalproject.util.ResponseStatusExceptionUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,6 +24,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class QuestionServiceImpl extends ParentService implements QuestionService {
+    @Value("${BASE_URL}")
+    private String baseUrl;
     private final QuestionRepository questionRepository;
     private final QuestionTitleRepository questionTitleRepository;
     private final StorageService storageService;
@@ -39,7 +42,7 @@ public class QuestionServiceImpl extends ParentService implements QuestionServic
                         query.score(),
                         query.createdAt(),
                         query.updatedAt(),
-                        query.mediaId()
+                        query.mediaId() != null ? baseUrl + "medias/" + query.mediaId() : null
                 )).toList();
     }
 
@@ -113,7 +116,8 @@ public class QuestionServiceImpl extends ParentService implements QuestionServic
                 query.id(), query.questionText(),
                 query.time(), query.score(),
                 query.createdAt(),
-                query.updatedAt(), query.mediaId()
+                query.updatedAt(),
+                query.mediaId() != null ? baseUrl + "medias/" + query.mediaId() : null
         );
     }
 

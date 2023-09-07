@@ -7,6 +7,7 @@ import com.gayuh.personalproject.enumerated.ResponseMessage;
 import com.gayuh.personalproject.service.question.QuestionService;
 import com.gayuh.personalproject.util.CustomResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +21,10 @@ import java.util.Map;
 @RequestMapping(value = "api/v1")
 public class QuestionController {
     private final QuestionService questionService;
-    private static final String QUESTION_TITLE_DETAIL_URL = "question-titles/";
 
-    //Question Start
+    @Value("${BASE_URL}")
+    private String baseUrl;
+    private static final String QUESTION_TITLE_DETAIL_URL = "question-titles/";
 
     /**
      * Get all question by questionTitleId
@@ -57,7 +59,7 @@ public class QuestionController {
         return CustomResponse.generateResponse(
                 ResponseMessage.CREATE_DATA.value(),
                 HttpStatus.CREATED,
-                Map.of("link", QUESTION_TITLE_DETAIL_URL + questionTitleId + "/questions/" + response)
+                Map.of("link", baseUrl + QUESTION_TITLE_DETAIL_URL + questionTitleId + "/questions/" + response)
         );
     }
 
@@ -81,7 +83,7 @@ public class QuestionController {
         return CustomResponse.generateResponse(
                 ResponseMessage.UPDATE_DATA.value(),
                 HttpStatus.OK,
-                Map.of("link", QUESTION_TITLE_DETAIL_URL + questionTitleId + "/questions/" + response)
+                Map.of("link", baseUrl + QUESTION_TITLE_DETAIL_URL + questionTitleId + "/questions/" + response)
         );
     }
 
@@ -122,6 +124,4 @@ public class QuestionController {
                 HttpStatus.OK
         );
     }
-
-    //Question End
 }

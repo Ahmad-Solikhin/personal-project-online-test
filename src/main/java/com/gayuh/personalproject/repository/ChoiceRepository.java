@@ -2,6 +2,7 @@ package com.gayuh.personalproject.repository;
 
 import com.gayuh.personalproject.dto.ChoiceResponse;
 import com.gayuh.personalproject.entity.Choice;
+import com.gayuh.personalproject.query.ChoiceQuery;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -42,4 +43,15 @@ public interface ChoiceRepository extends JpaRepository<Choice, Long> {
             where c.id = :choiceId and q.id = :questionId and qt.id = :questionTitleId
             """)
     Optional<Choice> findChoiceByQuestionTitleIdAndQuestionIdAndChoiceId(String questionTitleId, Long questionId, Long choiceId);
+
+    @Query(value = """
+            select new com.gayuh.personalproject.query.ChoiceQuery(
+            c.id,
+            c.choiceText,
+            c.correct,
+            c.question.id
+            )
+            from Choice c where c.question.id = :questionId
+            """)
+    List<ChoiceQuery> findAllChoiceQueryByQuestionId(Long questionId);
 }
