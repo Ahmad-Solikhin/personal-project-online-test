@@ -16,6 +16,7 @@ import com.gayuh.personalproject.repository.UserRepository;
 import com.gayuh.personalproject.repository.UserVerifyRepository;
 import com.gayuh.personalproject.service.JwtService;
 import com.gayuh.personalproject.service.ParentService;
+import com.gayuh.personalproject.service.email.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,6 +36,7 @@ public class AuthServiceImpl extends ParentService implements AuthService {
     private final RoleRepository roleRepository;
     private final UserVerifyRepository userVerifyRepository;
     private final ForgetPasswordRepository forgetPasswordRepository;
+    private final EmailService emailService;
 
     @Override
     public String login(LoginRequest request) {
@@ -92,7 +94,7 @@ public class AuthServiceImpl extends ParentService implements AuthService {
                 .build();
         userVerifyRepository.save(userVerify);
 
-        //Todo : Send email for account verification
+        emailService.sendEmailVerification(user.getName(), user.getEmail(), userVerify.getToken(), userVerify.getExpiredAt());
     }
 
     @Override
@@ -125,40 +127,46 @@ public class AuthServiceImpl extends ParentService implements AuthService {
             throw new ResponseStatusException(HttpStatus.LOCKED, ResponseMessage.ACCOUNT_SUSPEND.value());
         }
 
-        checkActivatedUser(userVerify.getUser());
+        User user = userVerify.getUser();
+
+        checkActivatedUser(user);
 
         userVerify.setToken(UUID.randomUUID().toString());
         userVerify.setExpiredAt(LocalDateTime.now().plusHours(3L));
         userVerifyRepository.save(userVerify);
 
-        //Todo : Send email for new token
-
+        emailService.sendEmailVerification(user.getName(), user.getEmail(), userVerify.getToken(), userVerify.getExpiredAt());
     }
 
     @Override
     public void forgotPassword(ResendEmailRequest request) {
         validationService.validate(request);
 
+        String token = UUID.randomUUID().toString();
+
         forgetPasswordRepository.findForgetPasswordByUserEmail(request.email()).ifPresentOrElse(forgetPassword -> {
-            forgetPassword.setToken(UUID.randomUUID().toString());
+            forgetPassword.setToken(token);
             forgetPassword.setExpiredAt(LocalDateTime.now().plusHours(3L));
             forgetPasswordRepository.save(forgetPassword);
-            //Todo : Send email for change password
+
+            User user = forgetPassword.getUser();
+
+            emailService.sendEmailForgetPassword(user.getName(), user.getEmail(), forgetPassword.getToken(), forgetPassword.getExpiredAt());
         }, () -> {
-            User user = userRepository.getUserByEmail(request.email()).orElseThrow(
+            UserQuery userQuery = userRepository.findUserQueryByEmail(request.email()).orElseThrow(
                     () -> new ResponseStatusException(HttpStatus.NOT_FOUND, ResponseMessage.DATA_NOT_FOUND.value())
             );
 
-            if (Boolean.TRUE.equals(user.getSuspend())) {
+            if (Boolean.TRUE.equals(userQuery.suspend())) {
                 throw new ResponseStatusException(HttpStatus.LOCKED, ResponseMessage.ACCOUNT_SUSPEND.value());
             }
 
-            forgetPasswordRepository.save(ForgetPassword.builder()
+            ForgetPassword forgetPassword = forgetPasswordRepository.save(ForgetPassword.builder()
                     .expiredAt(LocalDateTime.now().plusHours(3L))
-                    .token(UUID.randomUUID().toString())
-                    .user(user)
+                    .token(token)
+                    .user(User.builder().id(userQuery.id()).build())
                     .build());
-            //Todo : Send email for change password
+            emailService.sendEmailForgetPassword(userQuery.name(), userQuery.email(), token, forgetPassword.getExpiredAt());
         });
 
     }
