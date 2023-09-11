@@ -5,7 +5,7 @@ import com.gayuh.personalproject.entity.*;
 import com.gayuh.personalproject.query.QuestionTitleQuery;
 import com.gayuh.personalproject.repository.*;
 import com.gayuh.personalproject.service.ParentService;
-import com.gayuh.personalproject.service.storage.StorageService;
+import com.gayuh.personalproject.service.media.MediaService;
 import com.gayuh.personalproject.util.PaginationUtil;
 import com.gayuh.personalproject.util.ResponseStatusExceptionUtil;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ public class QuestionTitleServiceImpl extends ParentService implements QuestionT
     private final TestRepository testRepository;
     private final TestHistoryRepository testHistoryRepository;
     private final ChoiceRepository choiceRepository;
-    private final StorageService storageService;
+    private final MediaService mediaService;
 
     @Override
     public PaginationResponse<QuestionTitleResponse> getAllPublicQuestionTitle(PaginationRequest pagination) {
@@ -167,7 +167,7 @@ public class QuestionTitleServiceImpl extends ParentService implements QuestionT
 
             choiceRepository.deleteAllChoiceByQuestionId(idQuestions);
 
-            storageService.deleteAllImageByQuestionTitleId(questionTitleId);
+            mediaService.deleteAllImageByQuestionTitleId(questionTitleId);
         }
 
         testHistoryRepository.deleteAllTestHistoryByQuestionTitleId(questionTitleId);

@@ -30,9 +30,10 @@ public class QuestionController {
      * Get all question by questionTitleId
      * Will retrieve all question in question title with data included media if exist
      */
-    @GetMapping(value = QUESTION_TITLE_DETAIL_URL + "{questionTitleId}/questions")
+    @GetMapping(value = QUESTION_TITLE_DETAIL_URL + "{questionTitleId}/questions") //Tested : done
     public ResponseEntity<Object> getAllQuestionByQuestionTitleId(
-            @PathVariable(name = "questionTitleId") String questionTitleId
+            @PathVariable(name = "questionTitleId") String questionTitleId,
+            UserObject userObject
     ) {
         List<QuestionResponse> responses = questionService.getAllQuestionByQuestionTitleId(questionTitleId);
 
@@ -47,7 +48,7 @@ public class QuestionController {
      * Create question as a child of question title
      * File is optional, if exist only can upload 1 image
      */
-    @PostMapping(value = QUESTION_TITLE_DETAIL_URL + "{questionTitleId}/questions")
+    @PostMapping(value = QUESTION_TITLE_DETAIL_URL + "{questionTitleId}/questions") //Tested : done
     public ResponseEntity<Object> createQuestionForQuestionTitleId(
             @PathVariable(name = "questionTitleId") String questionTitleId,
             @RequestParam(name = "file", required = false) MultipartFile file,
@@ -70,7 +71,7 @@ public class QuestionController {
      * If the question don't have media and user upload media, then the question will have media
      * If the question have media and user update the media, old media will replace by the new media
      */
-    @PutMapping(value = QUESTION_TITLE_DETAIL_URL + "{questionTitleId}/questions/{questionId}")
+    @PutMapping(value = QUESTION_TITLE_DETAIL_URL + "{questionTitleId}/questions/{questionId}") //Tested : done
     public ResponseEntity<Object> updateQuestionByQuestionTitleId(
             @PathVariable(name = "questionTitleId") String questionTitleId,
             @PathVariable(name = "questionId") Long questionId,
@@ -90,7 +91,7 @@ public class QuestionController {
     /**
      * Get detail question by questionTitleId and questionId itself
      */
-    @GetMapping(value = QUESTION_TITLE_DETAIL_URL + "{questionTitleId}/questions/{questionId}")
+    @GetMapping(value = QUESTION_TITLE_DETAIL_URL + "{questionTitleId}/questions/{questionId}") //Tested : done
     public ResponseEntity<Object> getQuestionDetailByQuestionTitleId(
             @PathVariable(name = "questionTitleId") String questionTitleId,
             @PathVariable(name = "questionId") Long questionId,
@@ -110,7 +111,7 @@ public class QuestionController {
      * Delete question
      * If question deleted, it will delete tests table, choice table and media if exist
      */
-    @DeleteMapping(value = QUESTION_TITLE_DETAIL_URL + "{questionTitleId}/questions/{questionId}")
+    @DeleteMapping(value = QUESTION_TITLE_DETAIL_URL + "{questionTitleId}/questions/{questionId}") //Tested : done
     public ResponseEntity<Object> deleteQuestion(
             @PathVariable(name = "questionTitleId") String questionTitleId,
             @PathVariable(name = "questionId") Long questionId,

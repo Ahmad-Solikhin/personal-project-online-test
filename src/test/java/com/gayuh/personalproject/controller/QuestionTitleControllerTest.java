@@ -351,4 +351,85 @@ class QuestionTitleControllerTest {
             assertNull(response.getData());
         });
     }
+
+    @Test
+    void getQuestionTitleCreatedByUser() throws Exception {
+        createQuestionTitleSuccess();
+
+        mockMvc.perform(
+                get("/api/v1/question-titles/histories")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("Authorization", seederToken)
+        ).andExpectAll(
+                status().isOk()
+        ).andDo(result -> {
+            WebResponse<PaginationResponse<QuestionTitleResponse>, String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertNotNull(response.getMessage());
+            assertEquals(ResponseMessage.GET_ALL_DATA.value() + "1", response.getMessage());
+            assertNotNull(response.getData());
+        });
+    }
+
+    @Test
+    void deleteQuestionTitleSuccess() throws Exception {
+        createQuestionTitleSuccess();
+
+        mockMvc.perform(
+                delete(staticLinkQuestionTitleById)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("Authorization", seederToken)
+        ).andExpectAll(
+                status().isOk()
+        ).andDo(result -> {
+            WebResponse<String, String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertNotNull(response.getMessage());
+            assertEquals(ResponseMessage.DELETE_DATA.value(), response.getMessage());
+            assertNull(response.getData());
+        });
+    }
+
+    @Test
+    void deleteQuestionTitleNotFound() throws Exception {
+        createQuestionTitleSuccess();
+
+        mockMvc.perform(
+                delete("/api/v1/question-titles/undefined")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("Authorization", seederToken)
+        ).andExpectAll(
+                status().isNotFound()
+        ).andDo(result -> {
+            WebResponse<String, String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertNotNull(response.getMessage());
+            assertEquals(ResponseMessage.DATA_NOT_FOUND.value(), response.getMessage());
+            assertNull(response.getData());
+        });
+    }
+
+    @Test
+    void sharePrivateQuestion() throws Exception {
+        createQuestionTitleSuccess();
+
+        mockMvc.perform(
+                patch(staticLinkQuestionTitleById + "/share")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .param("generate", "true")
+                        .header("Authorization", seederToken)
+        ).andExpectAll(
+                status().isOk()
+        ).andDo(result -> {
+            WebResponse<Map<String, String>, String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertNotNull(response.getMessage());
+            assertEquals("Success share question title", response.getMessage());
+            assertNotNull(response.getData());
+        });
+    }
 }

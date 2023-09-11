@@ -1,11 +1,10 @@
-package com.gayuh.personalproject.service.storage;
+package com.gayuh.personalproject.service.media;
 
 import com.gayuh.personalproject.dto.MediaResponse;
 import com.gayuh.personalproject.entity.Question;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-public interface StorageService {
+public interface MediaService {
     String saveImageQuestion(MultipartFile file, Question question);
     void updateImageQuestion(MultipartFile file, String mediaId);
     void deleteImageQuestion(String mediaId);

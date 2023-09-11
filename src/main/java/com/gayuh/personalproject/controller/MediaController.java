@@ -1,7 +1,7 @@
 package com.gayuh.personalproject.controller;
 
 import com.gayuh.personalproject.dto.MediaResponse;
-import com.gayuh.personalproject.service.storage.StorageService;
+import com.gayuh.personalproject.service.media.MediaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MediaController {
 
-    private final StorageService storageService;
+    private final MediaService mediaService;
 
     @GetMapping(value = "{mediaId}")
     public ResponseEntity<byte[]> getMediaById(
             @PathVariable(name = "mediaId") String mediaId
     ) {
-        MediaResponse response = storageService.getTheMediaById(mediaId);
+        MediaResponse response = mediaService.getTheMediaById(mediaId);
 
         return ResponseEntity.ok().contentType(
                 MediaType.parseMediaType(response.contentType())
@@ -33,7 +33,7 @@ public class MediaController {
     public ResponseEntity<byte[]> downloadMediaById(
             @PathVariable(name = "mediaId") String mediaId
     ) {
-        MediaResponse response = storageService.getTheMediaById(mediaId);
+        MediaResponse response = mediaService.getTheMediaById(mediaId);
 
         String headerValue = "attachment; filename=\"" + response.fileName() + "\"";
 

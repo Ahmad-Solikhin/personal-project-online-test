@@ -199,7 +199,7 @@ public class QuestionTitleController {
         return CustomResponse.generateResponse(
                 "Success share question title",
                 HttpStatus.OK,
-                baseUrl + "question-titles?token=" + token
+                Map.of("link", baseUrl + "question-titles?token=" + token)
         );
     }
 }

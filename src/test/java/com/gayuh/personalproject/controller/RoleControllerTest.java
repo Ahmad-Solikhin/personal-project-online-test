@@ -10,6 +10,7 @@ import com.gayuh.personalproject.repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -54,6 +55,8 @@ class RoleControllerTest {
     private ChoiceRepository choiceRepository;
     @Autowired
     private MediaRepository mediaRepository;
+    @Value("${SEEDER_TOKEN}")
+    private String seederToken;
 
     private final Role staticRole = new Role();
 
@@ -149,6 +152,7 @@ class RoleControllerTest {
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson)
+                        .header("Authorization", seederToken)
         ).andExpectAll(
                 status().isCreated()
         ).andDo(result -> {
@@ -172,6 +176,7 @@ class RoleControllerTest {
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson)
+                        .header("Authorization", seederToken)
         ).andExpectAll(
                 status().isBadRequest()
         ).andDo(result -> {
@@ -197,6 +202,7 @@ class RoleControllerTest {
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson)
+                        .header("Authorization", seederToken)
         ).andExpectAll(
                 status().isOk()
         ).andDo(result -> {
@@ -224,6 +230,7 @@ class RoleControllerTest {
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson)
+                        .header("Authorization", seederToken)
         ).andExpectAll(
                 status().isBadRequest()
         ).andDo(result -> {
@@ -244,6 +251,7 @@ class RoleControllerTest {
         mockMvc.perform(
                 delete("/api/v1/roles/" + role.getId())
                         .accept(MediaType.APPLICATION_JSON)
+                        .header("Authorization", seederToken)
         ).andExpectAll(
                 status().isOk()
         ).andDo(result -> {
@@ -260,6 +268,7 @@ class RoleControllerTest {
         mockMvc.perform(
                 delete("/api/v1/topics/-1")
                         .accept(MediaType.APPLICATION_JSON)
+                        .header("Authorization", seederToken)
         ).andExpectAll(
                 status().isNotFound()
         ).andDo(result -> {

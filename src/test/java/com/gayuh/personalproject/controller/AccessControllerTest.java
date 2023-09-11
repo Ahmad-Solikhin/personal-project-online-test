@@ -10,6 +10,7 @@ import com.gayuh.personalproject.repository.AccessRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -38,6 +39,8 @@ class AccessControllerTest {
     private AccessRepository accessRepository;
     @Autowired
     private ObjectMapper objectMapper;
+    @Value("${SEEDER_TOKEN}")
+    private String seederToken;
 
     private final Access staticAccess = new Access();
 
@@ -124,6 +127,7 @@ class AccessControllerTest {
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson)
+                        .header("Authorization", seederToken)
         ).andExpectAll(
                 status().isCreated()
         ).andDo(result -> {
@@ -147,6 +151,7 @@ class AccessControllerTest {
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson)
+                        .header("Authorization", seederToken)
         ).andExpectAll(
                 status().isBadRequest()
         ).andDo(result -> {
@@ -172,6 +177,7 @@ class AccessControllerTest {
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson)
+                        .header("Authorization", seederToken)
         ).andExpectAll(
                 status().isOk()
         ).andDo(result -> {
@@ -199,6 +205,7 @@ class AccessControllerTest {
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson)
+                        .header("Authorization", seederToken)
         ).andExpectAll(
                 status().isBadRequest()
         ).andDo(result -> {
@@ -219,6 +226,7 @@ class AccessControllerTest {
         mockMvc.perform(
                 delete("/api/v1/accesses/" + access.getId())
                         .accept(MediaType.APPLICATION_JSON)
+                        .header("Authorization", seederToken)
         ).andExpectAll(
                 status().isOk()
         ).andDo(result -> {
@@ -235,6 +243,7 @@ class AccessControllerTest {
         mockMvc.perform(
                 delete("/api/v1/topics/-1")
                         .accept(MediaType.APPLICATION_JSON)
+                        .header("Authorization", seederToken)
         ).andExpectAll(
                 status().isNotFound()
         ).andDo(result -> {

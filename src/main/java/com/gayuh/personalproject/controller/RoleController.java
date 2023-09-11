@@ -2,9 +2,11 @@ package com.gayuh.personalproject.controller;
 
 import com.gayuh.personalproject.dto.MasterRequest;
 import com.gayuh.personalproject.dto.MasterResponse;
+import com.gayuh.personalproject.dto.UserObject;
 import com.gayuh.personalproject.enumerated.ResponseMessage;
 import com.gayuh.personalproject.service.role.RoleService;
 import com.gayuh.personalproject.util.CustomResponse;
+import com.gayuh.personalproject.util.FilterUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,8 +49,10 @@ public class RoleController {
 
     @PostMapping
     public ResponseEntity<Object> createRole(
-            @RequestBody MasterRequest request
+            @RequestBody MasterRequest request,
+            UserObject userObject
     ) {
+        FilterUtil.filterAdmin(userObject);
 
         MasterResponse response = roleService.create(request);
 
@@ -63,8 +67,10 @@ public class RoleController {
     @PutMapping(value = "{roleId}")
     public ResponseEntity<Object> updateRole(
             @PathVariable(name = "roleId") Long roleId,
-            @RequestBody MasterRequest request
+            @RequestBody MasterRequest request,
+            UserObject userObject
     ) {
+        FilterUtil.filterAdmin(userObject);
 
         MasterResponse response = roleService.update(request, roleId);
 
@@ -77,8 +83,10 @@ public class RoleController {
 
     @DeleteMapping(value = "{roleId}")
     public ResponseEntity<Object> deleteRole(
-            @PathVariable(name = "roleId") Long roleId
+            @PathVariable(name = "roleId") Long roleId,
+            UserObject userObject
     ) {
+        FilterUtil.filterAdmin(userObject);
 
         roleService.deleteById(roleId);
 

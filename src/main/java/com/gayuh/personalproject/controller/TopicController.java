@@ -2,9 +2,11 @@ package com.gayuh.personalproject.controller;
 
 import com.gayuh.personalproject.dto.MasterRequest;
 import com.gayuh.personalproject.dto.MasterResponse;
+import com.gayuh.personalproject.dto.UserObject;
 import com.gayuh.personalproject.enumerated.ResponseMessage;
 import com.gayuh.personalproject.service.topic.TopicService;
 import com.gayuh.personalproject.util.CustomResponse;
+import com.gayuh.personalproject.util.FilterUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,8 +44,11 @@ public class TopicController {
 
     @PostMapping
     public ResponseEntity<Object> createTopic(
-            @RequestBody MasterRequest request
+            @RequestBody MasterRequest request,
+            UserObject userObject
     ) {
+        FilterUtil.filterAdmin(userObject);
+
         MasterResponse response = topicService.create(request);
 
         return CustomResponse.generateResponse(
@@ -56,8 +61,11 @@ public class TopicController {
     @PutMapping(value = "/{topicId}")
     public ResponseEntity<Object> updateTopic(
             @RequestBody MasterRequest request,
-            @PathVariable(name = "topicId") Long topicId
+            @PathVariable(name = "topicId") Long topicId,
+            UserObject userObject
     ) {
+        FilterUtil.filterAdmin(userObject);
+
         MasterResponse response = topicService.update(request, topicId);
 
         return CustomResponse.generateResponse(
@@ -69,8 +77,11 @@ public class TopicController {
 
     @DeleteMapping(value = "/{topicId}")
     public ResponseEntity<Object> deleteTopic(
-            @PathVariable(name = "topicId") Long topicId
+            @PathVariable(name = "topicId") Long topicId,
+            UserObject userObject
     ) {
+        FilterUtil.filterAdmin(userObject);
+
         topicService.deleteById(topicId);
 
         return CustomResponse.generateResponse(

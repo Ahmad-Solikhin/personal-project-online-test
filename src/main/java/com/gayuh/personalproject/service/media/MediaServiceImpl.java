@@ -1,4 +1,4 @@
-package com.gayuh.personalproject.service.storage;
+package com.gayuh.personalproject.service.media;
 
 import com.gayuh.personalproject.dto.MediaResponse;
 import com.gayuh.personalproject.entity.Media;
@@ -25,7 +25,7 @@ import java.util.Objects;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class StorageServiceImpl implements StorageService {
+public class MediaServiceImpl implements MediaService {
 
     private final MediaRepository mediaRepository;
     private final Path folderImagePath = Paths.get("src/main/resources/static/img");

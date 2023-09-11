@@ -31,7 +31,11 @@ build/
 
 ### VS Code ###
 .vscode/
-/src/main/resources/static/
+/src/main/resources/static/document/*
+/src/main/resources/static/img/*
+/src/main/resources/static/sound/*
+/src/test/resources/files/*
 /src/main/java/com/gayuh/personalproject/controller/TestingController.java
 /src/main/resources/templates/emailtemplate-2.html
 /src/main/java/com/gayuh/personalproject/service/TestingService.java
+/images/

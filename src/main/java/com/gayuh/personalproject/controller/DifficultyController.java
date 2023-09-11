@@ -2,9 +2,11 @@ package com.gayuh.personalproject.controller;
 
 import com.gayuh.personalproject.dto.MasterRequest;
 import com.gayuh.personalproject.dto.MasterResponse;
+import com.gayuh.personalproject.dto.UserObject;
 import com.gayuh.personalproject.enumerated.ResponseMessage;
 import com.gayuh.personalproject.service.difficulty.DifficultyService;
 import com.gayuh.personalproject.util.CustomResponse;
+import com.gayuh.personalproject.util.FilterUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,8 +48,11 @@ public class DifficultyController {
 
     @PostMapping
     public ResponseEntity<Object> createDifficulty(
-            @RequestBody MasterRequest request
+            @RequestBody MasterRequest request,
+            UserObject userObject
     ) {
+        FilterUtil.filterAdmin(userObject);
+
         MasterResponse response = difficultyService.create(request);
 
         return CustomResponse.generateResponse(
@@ -60,8 +65,11 @@ public class DifficultyController {
     @PutMapping(value = "{difficultyId}")
     public ResponseEntity<Object> updateDifficulty(
             @PathVariable(name = "difficultyId") Long difficultyId,
-            @RequestBody MasterRequest request
+            @RequestBody MasterRequest request,
+            UserObject userObject
     ) {
+        FilterUtil.filterAdmin(userObject);
+
         MasterResponse response = difficultyService.update(request, difficultyId);
 
         return CustomResponse.generateResponse(
@@ -73,8 +81,11 @@ public class DifficultyController {
 
     @DeleteMapping(value = "{difficultyId}")
     public ResponseEntity<Object> deleteDifficulty(
-            @PathVariable(name = "difficultyId") Long difficultyId
+            @PathVariable(name = "difficultyId") Long difficultyId,
+            UserObject userObject
     ) {
+        FilterUtil.filterAdmin(userObject);
+
         difficultyService.deleteById(difficultyId);
 
         return CustomResponse.generateResponse(

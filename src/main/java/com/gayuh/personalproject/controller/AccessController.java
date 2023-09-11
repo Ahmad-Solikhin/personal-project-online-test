@@ -2,9 +2,11 @@ package com.gayuh.personalproject.controller;
 
 import com.gayuh.personalproject.dto.MasterRequest;
 import com.gayuh.personalproject.dto.MasterResponse;
+import com.gayuh.personalproject.dto.UserObject;
 import com.gayuh.personalproject.enumerated.ResponseMessage;
 import com.gayuh.personalproject.service.access.AccessService;
 import com.gayuh.personalproject.util.CustomResponse;
+import com.gayuh.personalproject.util.FilterUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,8 +47,11 @@ public class AccessController {
 
     @PostMapping
     public ResponseEntity<Object> createAccess(
-            @RequestBody MasterRequest request
+            @RequestBody MasterRequest request,
+            UserObject userObject
     ) {
+        FilterUtil.filterAdmin(userObject);
+
         MasterResponse response = accessService.create(request);
 
         return CustomResponse.generateResponse(
@@ -59,8 +64,11 @@ public class AccessController {
     @PutMapping(value = "{accessId}")
     public ResponseEntity<Object> updateAccess(
             @PathVariable(name = "accessId") Long accessId,
-            @RequestBody MasterRequest request
+            @RequestBody MasterRequest request,
+            UserObject userObject
     ) {
+        FilterUtil.filterAdmin(userObject);
+
         MasterResponse response = accessService.update(request, accessId);
 
         return CustomResponse.generateResponse(
@@ -72,8 +80,11 @@ public class AccessController {
 
     @DeleteMapping(value = "{accessId}")
     public ResponseEntity<Object> deleteAccess(
-            @PathVariable(name = "accessId") Long accessId
+            @PathVariable(name = "accessId") Long accessId,
+            UserObject userObject
     ) {
+        FilterUtil.filterAdmin(userObject);
+
         accessService.deleteById(accessId);
 
         return CustomResponse.generateResponse(

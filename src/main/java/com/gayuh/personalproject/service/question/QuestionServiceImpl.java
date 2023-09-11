@@ -11,7 +11,7 @@ import com.gayuh.personalproject.repository.QuestionRepository;
 import com.gayuh.personalproject.repository.QuestionTitleRepository;
 import com.gayuh.personalproject.repository.TestRepository;
 import com.gayuh.personalproject.service.ParentService;
-import com.gayuh.personalproject.service.storage.StorageService;
+import com.gayuh.personalproject.service.media.MediaService;
 import com.gayuh.personalproject.util.ResponseStatusExceptionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,7 +28,7 @@ public class QuestionServiceImpl extends ParentService implements QuestionServic
     private String baseUrl;
     private final QuestionRepository questionRepository;
     private final QuestionTitleRepository questionTitleRepository;
-    private final StorageService storageService;
+    private final MediaService mediaService;
     private final TestRepository testRepository;
     private final ChoiceRepository choiceRepository;
 
@@ -71,7 +71,7 @@ public class QuestionServiceImpl extends ParentService implements QuestionServic
         questionRepository.save(question);
 
         if (file != null) {
-            storageService.saveImageQuestion(file, question);
+            mediaService.saveImageQuestion(file, question);
         }
 
         return question.getId();
@@ -90,11 +90,11 @@ public class QuestionServiceImpl extends ParentService implements QuestionServic
         if (file != null && file.isEmpty()) file = null;
 
         if (question.getMedia() != null && file != null) {
-            storageService.updateImageQuestion(file, question.getMedia().getId());
+            mediaService.updateImageQuestion(file, question.getMedia().getId());
         } else if (question.getMedia() == null && file != null) {
-            storageService.saveImageQuestion(file, question);
+            mediaService.saveImageQuestion(file, question);
         } else if (question.getMedia() != null) {
-            storageService.deleteImageQuestion(question.getMedia().getId());
+            mediaService.deleteImageQuestion(question.getMedia().getId());
         }
 
         question.setQuestionText(request.questionText());
@@ -126,7 +126,7 @@ public class QuestionServiceImpl extends ParentService implements QuestionServic
         Question question = getQuestionByIdAndQuestionTitleId(questionId, questionTitleId);
 
         testRepository.deleteTestByQuestionId(questionId);
-        if (question.getMedia() != null) storageService.deleteImageQuestion(question.getMedia().getId());
+        if (question.getMedia() != null) mediaService.deleteImageQuestion(question.getMedia().getId());
         choiceRepository.deleteChoiceByQuestionId(questionId);
         questionRepository.delete(question);
     }
