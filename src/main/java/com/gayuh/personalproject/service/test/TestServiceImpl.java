@@ -34,7 +34,7 @@ public class TestServiceImpl extends ParentService implements TestService {
 
         //Find the user
         UserQuery userQuery = userRepository.findUserQueryByEmail(userObject.email()).orElseThrow(
-                ResponseStatusExceptionUtil::notFound
+                ResponseStatusExceptionUtil::unauthorized
         );
 
         User user = User.builder()

@@ -24,7 +24,7 @@ public class TestHistoryController {
      * Who can access : the user who made the question
      */
 
-    @GetMapping(value = "question-titles/{questionTitleId}/test-histories")
+    @GetMapping(value = "question-titles/{questionTitleId}/test-histories") //Tested : done
     public ResponseEntity<Object> getAllTestHistoryByQuestionTitleId(
             @PathVariable(name = "questionTitleId") String questionTitleId,
             @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
@@ -53,7 +53,7 @@ public class TestHistoryController {
         );
     }
 
-    @GetMapping(value = "test-histories")
+    @GetMapping(value = "test-histories") //Tested : done
     public ResponseEntity<Object> getAllTestHistoryByUserId(
             @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(name = "sort", required = false, defaultValue = "desc") String sort,
@@ -85,7 +85,7 @@ public class TestHistoryController {
         );
     }
 
-    @GetMapping(value = "test-histories/{testHistoryId}")
+    @GetMapping(value = "test-histories/{testHistoryId}") //Tested : done
     public ResponseEntity<Object> getTestHistoryDetail(
             @PathVariable(name = "testHistoryId") String testHistoryId,
             UserObject userObject

@@ -28,7 +28,7 @@ public class TestController {
      * After test history created, create new test with testHistoryId created before and post all questionId with answer null
      * Then return all the testId list
      */
-    @PostMapping(value = "question-titles/{questionTitleId}/tests")
+    @PostMapping(value = "question-titles/{questionTitleId}/tests") //Tested : done
     public ResponseEntity<Object> startTest(
             @PathVariable(name = "questionTitleId") String questionTitleId,
             UserObject userObject
@@ -48,7 +48,7 @@ public class TestController {
      * Check if the test not ended yet and this is your test
      * If the test not ended retrieve the question, media (if exist), and all choice
      */
-    @GetMapping(value = "tests/{testId}")
+    @GetMapping(value = "tests/{testId}") //Tested : done
     public ResponseEntity<Object> doTest(
             @PathVariable(name = "testId") String testId,
             UserObject userObject
@@ -66,7 +66,7 @@ public class TestController {
      * Answer test (put)
      * For the information is need testId and choiceId (for the answer)
      */
-    @PutMapping(value = "tests/{testId}/choices/{choiceId}")
+    @PutMapping(value = "tests/{testId}/choices/{choiceId}") //Tested : Done
     public ResponseEntity<Object> answerTest(
             @PathVariable(name = "testId") String testId,
             @PathVariable(name = "choiceId") Long choiceId
@@ -84,7 +84,7 @@ public class TestController {
      * After all question is done showing, then the client hit this endpoint to end the test to get score
      * Send data score result
      */
-    @PutMapping(value = "tests/{testId}/finish")
+    @PutMapping(value = "tests/{testId}/finish") //Tested : done
     public ResponseEntity<Object> finishTest(
             @PathVariable(name = "testId") String testId
     ) {

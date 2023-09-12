@@ -17,10 +17,4 @@ public class FilterUtil {
         }
     }
 
-    public static void filterUser(UserObject userObject) {
-        if (userObject.role().equals(Role.ROLE_GUEST)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, ResponseMessage.UNAUTHORIZED.value());
-        }
-    }
-
 }

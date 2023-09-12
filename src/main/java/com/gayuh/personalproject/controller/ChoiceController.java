@@ -21,7 +21,7 @@ public class ChoiceController {
     private final ChoiceService choiceService;
     private static final String QUESTION_TITLE_DETAIL_URL = "question-titles/";
 
-    @PostMapping(value = QUESTION_TITLE_DETAIL_URL + "{questionTitleId}/questions/{questionId}/choices")
+    @PostMapping(value = QUESTION_TITLE_DETAIL_URL + "{questionTitleId}/questions/{questionId}/choices") //Tested : done
     public ResponseEntity<Object> crateChoice(
             @PathVariable(name = "questionTitleId") String questionTitleId,
             @PathVariable(name = "questionId") Long questionId,
@@ -37,7 +37,7 @@ public class ChoiceController {
         );
     }
 
-    @GetMapping(value = QUESTION_TITLE_DETAIL_URL + "{questionTitleId}/questions/{questionId}/choices")
+    @GetMapping(value = QUESTION_TITLE_DETAIL_URL + "{questionTitleId}/questions/{questionId}/choices") //Tested : done
     public ResponseEntity<Object> getAllChoice(
             @PathVariable(name = "questionTitleId") String questionTitleId,
             @PathVariable(name = "questionId") Long questionId,
@@ -53,7 +53,7 @@ public class ChoiceController {
         );
     }
 
-    @PutMapping(value = QUESTION_TITLE_DETAIL_URL + "{questionTitleId}/questions/{questionId}/choices/{choiceId}")
+    @PutMapping(value = QUESTION_TITLE_DETAIL_URL + "{questionTitleId}/questions/{questionId}/choices/{choiceId}") //Tested : done
     public ResponseEntity<Object> updateChoice(
             @PathVariable(name = "questionTitleId") String questionTitleId,
             @PathVariable(name = "questionId") Long questionId,
@@ -69,7 +69,7 @@ public class ChoiceController {
         );
     }
 
-    @DeleteMapping(value = QUESTION_TITLE_DETAIL_URL + "{questionTitleId}/questions/{questionId}/choices/{choiceId}")
+    @DeleteMapping(value = QUESTION_TITLE_DETAIL_URL + "{questionTitleId}/questions/{questionId}/choices/{choiceId}") //Tested : done
     public ResponseEntity<Object> deleteChoice(
             @PathVariable(name = "questionTitleId") String questionTitleId,
             @PathVariable(name = "questionId") Long questionId,
