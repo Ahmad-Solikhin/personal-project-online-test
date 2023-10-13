@@ -39,3 +39,4 @@ build/
 /src/main/resources/templates/emailtemplate-2.html
 /src/main/java/com/gayuh/personalproject/service/TestingService.java
 /images/
+/.metadata/

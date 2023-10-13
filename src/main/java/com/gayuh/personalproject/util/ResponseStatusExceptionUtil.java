@@ -21,4 +21,7 @@ public class ResponseStatusExceptionUtil {
     public static ResponseStatusException notFound(){
         return new ResponseStatusException(HttpStatus.NOT_FOUND, ResponseMessage.DATA_NOT_FOUND.value());
     }
+    public static void forbiddenVoid() {
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN, ResponseMessage.FORBIDDEN.value());
+    }
 }

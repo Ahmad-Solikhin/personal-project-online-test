@@ -202,7 +202,7 @@ public class QuestionTitleServiceImpl extends ParentService implements QuestionT
 
     private void checkAccessUser(UserObject userObject, QuestionTitleQuery query) {
         if (!userObject.id().equals(query.userId())) {
-            ResponseStatusExceptionUtil.unauthorizedVoid();
+            ResponseStatusExceptionUtil.forbiddenVoid();
         }
     }
 

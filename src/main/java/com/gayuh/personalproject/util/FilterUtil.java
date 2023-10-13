@@ -13,7 +13,7 @@ public class FilterUtil {
 
     public static void filterAdmin(UserObject userObject) {
         if (!userObject.role().equals(Role.ROLE_ADMIN)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, ResponseMessage.UNAUTHORIZED.value());
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, ResponseMessage.FORBIDDEN.value());
         }
     }
 

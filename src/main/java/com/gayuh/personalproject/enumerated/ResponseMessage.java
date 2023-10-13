@@ -21,7 +21,8 @@ public enum ResponseMessage {
     ACTIVATE_ACCOUNT_SUCCESS("Success activated your account, please login"),
     SUCCESS_RESEND_EMAIL("Success resend, please check your email"),
     SUCCESS_CHANGE_PASSWORD("Success change password, please login"),
-    PASSWORD_SAME_OLD_PASSWORD("Password are same with old password");
+    PASSWORD_SAME_OLD_PASSWORD("Password are same with old password"),
+    FORBIDDEN("Forbidden");
 
     private final String value;
 
