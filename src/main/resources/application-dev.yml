@@ -1,9 +1,12 @@
 spring:
+  security:
+    user:
+      password: none
   datasource:
     driver-class-name: org.postgresql.Driver
-    username: postgres
+    username: ${DB_USERNAME_POSTGRES:postgres}
     password: ${DB_PASSWORD}
-    url: jdbc:postgresql://localhost:5400/test_personal_project_online_test
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5400}/test_personal_project_online_test
     hikari:
       connection-timeout: 600000
       idle-timeout: 600000
@@ -19,6 +22,7 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         jdbc:
           batch_size: 50
+    open-in-view: false
   servlet:
     multipart:
       enabled: true
@@ -29,12 +33,14 @@ spring:
     scheduling:
       pool:
         size: 2
+  main:
+    banner-mode: console
 
 server:
-  port: 9999
+  port: ${APP_PORT:9999}
 
-BASE_URL: http://localhost:9999/api/v1/
+BASE_URL: http://localhost:${APP_PORT:9999}/api/v1/
 
-CLIENT_BASE_URL: http://localhost:9999/api/v1/
+CLIENT_BASE_URL: http://localhost:${APP_PORT:9999}/api/v1/
 
 SIGNATURE_KEY: U6xOqiivo/fsQWEFhGQ1osn28gfjPticu9eW1VNapNY=

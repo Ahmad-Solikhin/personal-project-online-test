@@ -40,3 +40,4 @@ build/
 /src/main/java/com/gayuh/personalproject/service/TestingService.java
 /images/
 /.metadata/
+/.env
