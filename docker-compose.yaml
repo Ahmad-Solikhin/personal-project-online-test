@@ -32,21 +32,20 @@ services:
   spring_container:
     container_name: online_test
     build:
-      context: ../..
-      dockerfile: ../Dockerfile
-      # Provide your own .env file
-      args:
-        DB_USERNAME_POSTGRES: ${DB_USERNAME_POSTGRES}
-        DB_PASSWORD: ${DB_PASSWORD}
-        EMAIL_USERNAME: ${EMAIL_USERNAME}
-        EMAIL_PASSWORD: ${EMAIL_PASSWORD}
+      context: .
+      dockerfile: Dockerfile
     image: "ahmadsgr39/app_online_test:1.0.0"
     ports:
       - "9999:8080"
     environment:
+      # Provide your own .env file
       SIGNATURE_KEY: "U6xOqiivo/fsQWEFhGQ1osn28gfjPticu9eW1VNapNY="
       ACTIVE_PROFILE: prod
       DB_HOST: postgres_online_test_db
+      DB_USERNAME_POSTGRES: ${DB_USERNAME_POSTGRES}
+      DB_PASSWORD: ${DB_PASSWORD}
+      EMAIL_USERNAME: ${EMAIL_USERNAME}
+      EMAIL_PASSWORD: ${EMAIL_PASSWORD}
     depends_on:
       - postgres_online_test_db
     restart: always
