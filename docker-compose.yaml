@@ -29,8 +29,8 @@ services:
       POSTGRES_DB: test_personal_project_online_test
     networks:
       - project_network
-  spring_container:
-    container_name: online_test
+  online-test:
+    container_name: online-test
     build:
       context: .
       dockerfile: Dockerfile
@@ -48,6 +48,7 @@ services:
       EMAIL_PASSWORD: ${EMAIL_PASSWORD}
     depends_on:
       - postgres_online_test_db
+      - postgres_online_test_db_test
     restart: always
     networks:
       - project_network
