@@ -1,7 +1,9 @@
 package com.gayuh.personalproject.configuration;
 
 import com.gayuh.personalproject.resolver.UserArgumentResolver;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,11 +14,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Properties;
+import java.util.TimeZone;
 
 @Configuration
 @RequiredArgsConstructor
+@Slf4j
 public class ApplicationConfiguration implements WebMvcConfigurer {
     private final UserArgumentResolver userArgumentResolver;
     private static final String TIMEOUT_THREAD = "60000";
@@ -57,5 +62,12 @@ public class ApplicationConfiguration implements WebMvcConfigurer {
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         WebMvcConfigurer.super.addArgumentResolvers(resolvers);
         resolvers.add(userArgumentResolver);
+    }
+
+    @PostConstruct
+    public void init() {
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Jakarta"));
+
+        log.info("Current time : {}", LocalDateTime.now());
     }
 }
