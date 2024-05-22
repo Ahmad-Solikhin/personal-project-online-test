@@ -2,17 +2,22 @@ package com.gayuh.personalproject.configuration;
 
 import com.gayuh.personalproject.resolver.UserArgumentResolver;
 import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -70,4 +75,19 @@ public class ApplicationConfiguration implements WebMvcConfigurer {
 
         log.info("Current time : {}", LocalDateTime.now());
     }
+
+    //Use for listing all endpoint use in this service
+    @EventListener
+    public void handleContextRefresh(ContextRefreshedEvent event) {
+        ApplicationContext applicationContext = event.getApplicationContext();
+        applicationContext.getBean(RequestMappingHandlerMapping.class)
+                .getHandlerMethods().forEach((key, value) -> log.info("Method {} => {} => {}", key.getMethodsCondition().getMethods(), key, value.getMethod().getParameters()));
+    }
+
+    //Print out message when the service is shut down
+    @PreDestroy
+    public void beforeDestroy() {
+        log.info("Online Test Service is Shutdown");
+    }
+
 }

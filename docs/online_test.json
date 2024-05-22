@@ -1733,6 +1733,32 @@
           }
         }
       }
+    },
+    "/media/{mediaId}" : {
+      "get": {
+        "tags": [
+          "Media"
+        ],
+        "summary": "Get media byte by id",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/StringId"
+          }
+        ]
+      }
+    },
+    "/media/{mediaId}/download" : {
+      "get": {
+        "tags": [
+          "Media"
+        ],
+        "summary": "Download media by id",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/StringId"
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -1825,6 +1851,22 @@
           },
           "Not found": {
             "value": "-1"
+          }
+        }
+      },
+      "StringId": {
+        "name": "stringId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "examples": {
+          "Exist": {
+            "value": "example"
+          },
+          "Not found": {
+            "value": "undefined"
           }
         }
       }
