@@ -26,8 +26,10 @@ ENV DB_PASSWORD=${DB_PASSWORD}
 ENV EMAIL_USERNAME=${EMAIL_USERNAME}
 ENV EMAIL_PASSWORD=${EMAIL_PASSWORD}
 ENV DB_HOST=localhost
+ENV APP_HOST=localhost
 ENV DB_PORT=5432
 ENV APP_PORT=8080
+ENV TIMEZONE="Asia/Jakarta"
 
 EXPOSE ${APP_PORT}/tcp
 
@@ -35,4 +37,4 @@ COPY --from=build /app/target/personal-project-online-test.jar spring-boot.jar
 
 #COPY target/${JAR_FILE_NAME}.jar spring-boot.jar
 
-ENTRYPOINT ["java", "-jar", "spring-boot.jar", "--spring.profiles.active=${ACTIVE_PROFILE}"]
+ENTRYPOINT ["java", "-Duser.timezone=${TIMEZONE}", "-jar", "spring-boot.jar", "--spring.profiles.active=${ACTIVE_PROFILE}"]
