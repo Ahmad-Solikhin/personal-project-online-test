@@ -8,7 +8,7 @@ services:
       - "5401:5432"
     environment:
       POSTGRES_USER: ${DB_USERNAME_POSTGRES}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_PASSWORD: ${DB_PASSWORD_POSTGRES}
       POSTGRES_DB: personal_project_online_test
     volumes:
       - type: volume
@@ -25,7 +25,7 @@ services:
       - "5402:5432"
     environment:
       POSTGRES_USER: ${DB_USERNAME_POSTGRES}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_PASSWORD: ${DB_PASSWORD_POSTGRES}
       POSTGRES_DB: test_personal_project_online_test
     networks:
       - project_network
@@ -43,7 +43,7 @@ services:
       ACTIVE_PROFILE: prod
       DB_HOST: postgres_online_test_db
       DB_USERNAME_POSTGRES: ${DB_USERNAME_POSTGRES}
-      DB_PASSWORD: ${DB_PASSWORD}
+      DB_PASSWORD: ${DB_PASSWORD_POSTGRES}
       EMAIL_USERNAME: ${EMAIL_USERNAME}
       EMAIL_PASSWORD: ${EMAIL_PASSWORD}
     depends_on:
